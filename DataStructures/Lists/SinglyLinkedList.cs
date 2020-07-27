@@ -45,9 +45,9 @@
                 return;
             }
 
-            var node = GetAt(index - 1);
-            var temp = node.Next;
-            node.Next = new Node<T>(value, temp);
+            var prev = GetAt(index - 1);
+            var cur = prev.Next;
+            prev.Next = new Node<T>(value, cur);
             Size++;
         }
 
@@ -74,11 +74,11 @@
                 return head;
             }
 
-            var node = GetAt(index - 1);
-            var temp = node.Next;
-            node.Next = temp?.Next;
+            var prev = GetAt(index - 1);
+            var cur = prev.Next;
+            prev.Next = cur?.Next;
             Size--;
-            return temp;
+            return cur;
         }
 
         // Remove a node from the head of the list
@@ -100,10 +100,10 @@
             var cur = Head;
             while (cur != null)
             {
-                var temp = cur.Next;
+                var next = cur.Next;
                 cur.Next = prev;
                 prev = cur;
-                cur = temp;
+                cur = next;
 
                 if (cur == null)
                 {
@@ -114,14 +114,9 @@
 
         public class Node<NodeT>
         {
-            public Node(NodeT value)
-            {
-                Value = value;
-            }
-
             public Node(
                 NodeT value,
-                Node<NodeT> next)
+                Node<NodeT> next = null)
             {
                 Value = value;
                 Next = next;

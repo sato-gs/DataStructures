@@ -48,9 +48,9 @@
             }
             else
             {
-                var node = GetAt(index - 1);
-                var temp = node.Next;
-                node.Next = new Node<T>(value, temp);
+                var prev = GetAt(index - 1);
+                var cur = prev.Next;
+                prev.Next = new Node<T>(value, cur);
                 Size++;
             }
         }
@@ -58,11 +58,11 @@
         // Add a node to the head of the list
         public void AddFirst(T value)
         {
-            var node = new Node<T>(value, Head);
-            Head = node;
+            var head = new Node<T>(value, Head);
+            Head = head;
             if (Size == 0)
             {
-                Tail = node;
+                Tail = head;
             }
             Size++;
         }
@@ -70,16 +70,16 @@
         // Add a node to the tail of the list
         public void AddLast(T value)
         {
-            var node = new Node<T>(value);
+            var tail = new Node<T>(value);
             if (Size == 0)
             {
-                Head = node;
-                Tail = node;
+                Head = tail;
+                Tail = tail;
             }
             else
             {
-                Tail.Next = node;
-                Tail = node;
+                Tail.Next = tail;
+                Tail = tail;
             }
             Size++;
         }
@@ -97,26 +97,26 @@
             }
             else
             {
-                var node = GetAt(index - 1);
-                var temp = node.Next;
-                node.Next = temp?.Next;
+                var prev = GetAt(index - 1);
+                var cur = prev.Next;
+                prev.Next = cur?.Next;
                 Size--;
-                return temp;
+                return cur;
             }
         }
 
         // Remove a node from the head of the list
         public Node<T> RemoveFirst()
         {
-            var temp = Head;
-            Head = temp?.Next;
+            var head = Head;
+            Head = head?.Next;
             Size = Math.Max(0, Size - 1);
             if (Size == 0)
             {
                 Tail = null;
             }
 
-            return temp;
+            return head;
         }
 
         // Remove a node from the tail of the list
@@ -151,10 +151,10 @@
             var cur = Head;
             while (cur != null)
             {
-                var temp = cur.Next;
+                var next = cur.Next;
                 cur.Next = prev;
                 prev = cur;
-                cur = temp;
+                cur = next;
             }
 
             var head = Head;
@@ -164,14 +164,9 @@
 
         public class Node<NodeT>
         {
-            public Node(NodeT value)
-            {
-                Value = value;
-            }
-
             public Node(
                 NodeT value,
-                Node<NodeT> next)
+                Node<NodeT> next = null)
             {
                 Value = value;
                 Next = next;
