@@ -173,7 +173,7 @@
                 Is.Not.Null
                 .And.Property(nameof(Node<int>.Value)).EqualTo(value));
             Assert.That(prev?.Next, Is.EqualTo(range == 0 ? null : result));
-            Assert.That(result.Next, Is.EqualTo(null));
+            Assert.That(result.Next, Is.Null);
             Assert.That(_list.Size, Is.EqualTo(prevSize + 1));
             Assert.That(_list.Tail, Is.EqualTo(result));
             if (prevSize == 0)
@@ -282,8 +282,8 @@
                     .And.Property(nameof(Node<int>.Value)).EqualTo(range - 1));
                 Assert.That(_list.GetAt(_list.Size - 1), Is.Not.EqualTo(result));
             }
-            Assert.That(_list.Size, Is.EqualTo(Math.Max(0, prevSize - 1)));
             Assert.That(prev?.Next, Is.Null);
+            Assert.That(_list.Size, Is.EqualTo(Math.Max(0, prevSize - 1)));
             Assert.That(_list.Tail, Is.EqualTo(prev));
         }
 
@@ -298,6 +298,8 @@
             {
                 _list.AddLast(i);
             }
+            var head = _list.GetAt(0);
+            var tail = _list.GetAt(_list.Size - 1);
 
             // Act
             _list.Reverse();
@@ -311,6 +313,8 @@
                     Is.Not.Null
                     .And.Property(nameof(Node<int>.Value)).EqualTo(range - 1 - i));
             }
+            Assert.That(_list.Head, Is.EqualTo(tail));
+            Assert.That(_list.Tail, Is.EqualTo(head));
         }
     }
 }

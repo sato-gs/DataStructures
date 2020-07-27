@@ -2,8 +2,8 @@
 {
     using System;
 
-    // Singly linked list with tail
-    public class SinglyLinkedListWithTail<T>
+    // Doubly linked list with tail
+    public class DoublyLinkedListWithTail<T>
     {
         public int Size { get; private set; }
         public Node<T> Head { get; private set; }
@@ -17,12 +17,14 @@
                 throw new IndexOutOfRangeException();
             }
 
-            var counter = 0;
-            var cur = Head;
+            var middle = (Size - 1) / 2;
+            var ascending = index <= middle;
+            var counter = ascending ? 0 : Size - 1;
+            var cur = ascending ? Head : Tail;
             while (counter != index)
             {
-                cur = cur.Next;
-                counter++;
+                cur = ascending ? cur.Next : cur.Prev;
+                counter = ascending ? counter + 1 : counter - 1;
             }
 
             return cur;
@@ -49,8 +51,10 @@
             else
             {
                 var prev = GetAt(index - 1);
-                var cur = prev.Next;
-                prev.Next = new Node<T>(value, cur);
+                var next = prev.Next;
+                var node = new Node<T>(value, prev, next);
+                prev.Next = node;
+                next.Prev = node;
                 Size++;
             }
         }
@@ -58,29 +62,34 @@
         // Add a node to the head of the list
         public void AddFirst(T value)
         {
-            var head = new Node<T>(value, Head);
-            Head = head;
-            if (Size == 0)
+            var node = new Node<T>(value, null, Head);
+            if (Head == null)
             {
-                Tail = head;
+                Tail = node;
             }
+            else
+            {
+                Head.Prev = node;
+            }
+
+            Head = node;
             Size++;
         }
 
         // Add a node to the tail of the list
         public void AddLast(T value)
         {
-            var tail = new Node<T>(value);
-            if (Size == 0)
+            var node = new Node<T>(value, Tail);
+            if (Tail == null)
             {
-                Head = tail;
-                Tail = tail;
+                Head = node;
             }
             else
             {
-                Tail.Next = tail;
-                Tail = tail;
+                Tail.Next = node;
             }
+
+            Tail = node;
             Size++;
         }
 
@@ -97,11 +106,13 @@
             }
             else
             {
-                var prev = GetAt(index - 1);
-                var cur = prev.Next;
-                prev.Next = cur?.Next;
+                var node = GetAt(index);
+                var prev = node.Prev;
+                var next = node.Next;
+                prev.Next = next;
+                next.Prev = prev;
                 Size--;
-                return cur;
+                return node;
             }
         }
 
@@ -109,51 +120,49 @@
         public Node<T> RemoveFirst()
         {
             var head = Head;
-            Head = head?.Next;
-            Size = Math.Max(0, Size - 1);
-            if (Size == 0)
+            var next = head?.Next;
+            if (next == null)
             {
                 Tail = null;
             }
+            else
+            {
+                next.Prev = null;
+            }
 
+            Head = next;
+            Size = Math.Max(0, Size - 1);
             return head;
         }
 
         // Remove a node from the tail of the list
         public Node<T> RemoveLast()
         {
-            Node<T> prev = null;
-            var cur = Head;
-            while (cur?.Next != null)
+            var tail = Tail;
+            var prev = tail?.Prev;
+            if (prev == null)
             {
-                prev = cur;
-                cur = cur.Next;
+                Head = null;
             }
-
-            Size = Math.Max(0, Size - 1);
-            if (prev != null)
+            else
             {
                 prev.Next = null;
             }
-            if (Size <= 1)
-            {
-                Head = prev;
-            }
-            Tail = prev;
 
-            return cur;
+            Tail = prev;
+            Size = Math.Max(0, Size - 1);
+            return tail;
         }
 
         // Reverse nodes
         public void Reverse()
         {
-            Node<T> prev = null;
             var cur = Head;
             while (cur != null)
             {
                 var next = cur.Next;
-                cur.Next = prev;
-                prev = cur;
+                cur.Next = cur.Prev;
+                cur.Prev = next;
                 cur = next;
             }
 
@@ -166,13 +175,16 @@
         {
             public Node(
                 NodeT value,
+                Node<NodeT> prev = null,
                 Node<NodeT> next = null)
             {
                 Value = value;
+                Prev = prev;
                 Next = next;
             }
 
             public NodeT Value { get; set; }
+            public Node<NodeT> Prev { get; set; }
             public Node<NodeT> Next { get; set; }
         }
     }

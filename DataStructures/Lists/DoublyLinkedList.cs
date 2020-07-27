@@ -2,8 +2,8 @@
 {
     using System;
 
-    // Singly linked list without tail
-    public class SinglyLinkedList<T>
+    // Doubly linked list without tail
+    public class DoublyLinkedList<T>
     {
         public int Size { get; private set; }
         public Node<T> Head { get; private set; }
@@ -39,15 +39,25 @@
         {
             if (index == 0)
             {
-                var head = new Node<T>(value, Head);
+                var head = new Node<T>(value, null, Head);
+                if (Head != null)
+                {
+                    Head.Prev = head;
+                }
+
                 Head = head;
                 Size++;
                 return;
             }
 
             var prev = GetAt(index - 1);
-            var cur = prev.Next;
-            prev.Next = new Node<T>(value, cur);
+            var next = prev.Next;
+            var node = new Node<T>(value, prev, next);
+            prev.Next = node;
+            if (next != null)
+            {
+                next.Prev = node;
+            }
             Size++;
         }
 
@@ -69,16 +79,28 @@
             if (index == 0)
             {
                 var head = Head;
-                Head = head?.Next;
+                var headNext = head?.Next;
+                if (headNext != null)
+                {
+                    headNext.Prev = null;
+                }
+
+                Head = headNext;
                 Size = Math.Max(0, Size - 1);
                 return head;
             }
 
-            var prev = GetAt(index - 1);
-            var cur = prev.Next;
-            prev.Next = cur?.Next;
+            var node = GetAt(index);
+            var prev = node.Prev;
+            var next = node.Next;
+            prev.Next = next;
+            if (next != null)
+            {
+                next.Prev = prev;
+            }
+
             Size--;
-            return cur;
+            return node;
         }
 
         // Remove a node from the head of the list
@@ -96,19 +118,19 @@
         // Reverse nodes
         public void Reverse()
         {
-            Node<T> prev = null;
             var cur = Head;
             while (cur != null)
             {
                 var next = cur.Next;
-                cur.Next = prev;
-                prev = cur;
-                cur = next;
+                cur.Next = cur.Prev;
+                cur.Prev = cur.Next;
 
-                if (cur == null)
+                if (next == null)
                 {
-                    Head = prev;
+                    Head = cur;
                 }
+
+                cur = next;
             }
         }
 
@@ -116,13 +138,16 @@
         {
             public Node(
                 NodeT value,
+                Node<NodeT> prev = null,
                 Node<NodeT> next = null)
             {
                 Value = value;
+                Prev = prev;
                 Next = next;
             }
 
             public NodeT Value { get; set; }
+            public Node<NodeT> Prev { get; set; }
             public Node<NodeT> Next { get; set; }
         }
     }
