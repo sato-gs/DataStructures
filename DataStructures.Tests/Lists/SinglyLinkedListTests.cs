@@ -98,8 +98,9 @@
             {
                 _list.AddLast(i);
             }
-            var previousSize = _list.Size;
-            var next = index == previousSize ? null : _list.GetAt(index);
+            var prevSize = _list.Size;
+            var prev = index == 0 ? null : _list.GetAt(index - 1);
+            var next = index == prevSize ? null : _list.GetAt(index);
 
             // Act
             _list.AddAt(index, value);
@@ -110,8 +111,9 @@
                 result,
                 Is.Not.Null
                 .And.Property(nameof(Node<int>.Value)).EqualTo(value));
+            Assert.That(prev?.Next, Is.EqualTo(index == 0 ? null : result));
             Assert.That(result.Next, Is.EqualTo(next));
-            Assert.That(_list.Size, Is.EqualTo(previousSize + 1));
+            Assert.That(_list.Size, Is.EqualTo(prevSize + 1));
         }
 
         [Test]
@@ -125,7 +127,7 @@
             {
                 _list.AddLast(i);
             }
-            var previousSize = _list.Size;
+            var prevSize = _list.Size;
             var next = range == 0 ? null : _list.GetAt(0);
 
             // Act
@@ -138,7 +140,8 @@
                 Is.Not.Null
                 .And.Property(nameof(Node<int>.Value)).EqualTo(value));
             Assert.That(result.Next, Is.EqualTo(next));
-            Assert.That(_list.Size, Is.EqualTo(previousSize + 1));
+            Assert.That(_list.Size, Is.EqualTo(prevSize + 1));
+            Assert.That(_list.Head, Is.EqualTo(result));
         }
 
         [Test]
@@ -152,7 +155,8 @@
             {
                 _list.AddLast(i);
             }
-            var previousSize = _list.Size;
+            var prevSize = _list.Size;
+            var prev = range == 0 ? null : _list.GetAt(_list.Size - 1);
 
             // Act
             _list.AddLast(value);
@@ -163,8 +167,13 @@
                 result,
                 Is.Not.Null
                 .And.Property(nameof(Node<int>.Value)).EqualTo(value));
+            Assert.That(prev?.Next, Is.EqualTo(range == 0 ? null : result));
             Assert.That(result.Next, Is.EqualTo(null));
-            Assert.That(_list.Size, Is.EqualTo(previousSize + 1));
+            Assert.That(_list.Size, Is.EqualTo(prevSize + 1));
+            if (prevSize == 0)
+            {
+                Assert.That(_list.Head, Is.EqualTo(result));
+            }
         }
 
         [Test]
@@ -187,19 +196,20 @@
             {
                 _list.AddLast(i);
             }
-            var previousSize = _list.Size;
+            var prevSize = _list.Size;
+            var prev = index == 0 ? null : _list.GetAt(index - 1);
+            var next = index == _list.Size - 1 ? null : _list.GetAt(index + 1);
 
             // Act
             var result = _list.RemoveAt(index);
 
             // Assert
-            var previous = index == 0 ? null : _list.GetAt(index - 1);
             Assert.That(
                 result,
                 Is.Not.Null
                 .And.Property(nameof(Node<int>.Value)).EqualTo(index));
-            Assert.That(previous, Is.Not.EqualTo(result));
-            Assert.That(_list.Size, Is.EqualTo(previousSize - 1));
+            Assert.That(prev?.Next, Is.EqualTo(index == 0 ? null : next));
+            Assert.That(_list.Size, Is.EqualTo(prevSize - 1));
         }
 
         [Test]
@@ -213,7 +223,8 @@
             {
                 _list.AddLast(i);
             }
-            var previousSize = _list.Size;
+            var prevSize = _list.Size;
+            var head = range == 0 ? null : _list.GetAt(1);
 
             // Act
             var result = _list.RemoveFirst();
@@ -229,12 +240,10 @@
                     result,
                     Is.Not.Null
                     .And.Property(nameof(Node<int>.Value)).EqualTo(0));
-                Assert.That(
-                    _list.GetAt(0),
-                    Is.Not.Null
-                    .And.Property(nameof(Node<int>.Value)).Not.EqualTo(0));
+                Assert.That(_list.GetAt(0), Is.Not.EqualTo(result));
             }
-            Assert.That(_list.Size, Is.EqualTo(Math.Max(0, previousSize - 1)));
+            Assert.That(_list.Size, Is.EqualTo(Math.Max(0, prevSize - 1)));
+            Assert.That(_list.Head, Is.EqualTo(head));
         }
 
         [Test]
@@ -248,7 +257,8 @@
             {
                 _list.AddLast(i);
             }
-            var previousSize = _list.Size;
+            var prevSize = _list.Size;
+            var prev = range == 0 ? null : _list.GetAt(range - 2);
 
             // Act
             var result = _list.RemoveLast();
@@ -264,13 +274,10 @@
                     result,
                     Is.Not.Null
                     .And.Property(nameof(Node<int>.Value)).EqualTo(range - 1));
-                Assert.That(
-                    _list.GetAt(_list.Size - 1),
-                    Is.Not.Null
-                    .And.Property(nameof(Node<int>.Value)).Not.EqualTo(range - 1)
-                    .And.Property(nameof(Node<int>.Next)).Null);
+                Assert.That(_list.GetAt(_list.Size - 1), Is.Not.EqualTo(result));
             }
-            Assert.That(_list.Size, Is.EqualTo(Math.Max(0, previousSize - 1)));
+            Assert.That(_list.Size, Is.EqualTo(Math.Max(0, prevSize - 1)));
+            Assert.That(prev?.Next, Is.Null);
         }
 
         [Test]
