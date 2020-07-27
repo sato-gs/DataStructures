@@ -3,17 +3,17 @@
     using System;
     using DataStructures.Lists;
     using NUnit.Framework;
-    using static DataStructures.Lists.TailedSinglyLinkedList<int>;
+    using static DataStructures.Lists.SinglyLinkedListWithTail<int>;
 
-    public class TailedSinglyLinkedListTests
+    public class SinglyLinkedListWithTailTests
     {
 
-        private TailedSinglyLinkedList<int> _list;
+        private SinglyLinkedListWithTail<int> _list;
 
         [SetUp]
         public void SetUp()
         {
-            _list = new TailedSinglyLinkedList<int>();
+            _list = new SinglyLinkedListWithTail<int>();
         }
 
         [Test]

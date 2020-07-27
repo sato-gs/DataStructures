@@ -3,7 +3,7 @@
     using System;
 
     // Singly linked list with tail pointer
-    public class TailedSinglyLinkedList<T>
+    public class SinglyLinkedListWithTail<T>
     {
         public int Size { get; private set; }
         public Node<T> Head { get; private set; }
