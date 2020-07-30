@@ -5,15 +5,16 @@
     // Stack implemented using dynamic Array (e.g. Array with resize feature)
     public class StackWithDynamicArray<T>
     {
-        private readonly int _defaultSize = 5;
         private T[] _stack;
+        private int _size;
+        private readonly int _defaultSize = 5;
 
         // Represent whether a stack is empty or not
         public bool IsEmpty
         {
             get
             {
-                return Count == 0;
+                return _size == 0;
             }
         }
 
@@ -22,30 +23,36 @@
         {
             get
             {
-                return Count == _stack.Length;
+                return _size == _stack.Length;
             }
         }
 
         // Represent the number of items stored in a stack
-        public int Count { get; private set; }
+        public int Count
+        {
+            get
+            {
+                return _size;
+            }
+        }
 
         public StackWithDynamicArray()
         {
             _stack = new T[_defaultSize];
-            Count = 0;
+            _size = 0;
         }
 
         public StackWithDynamicArray(int size)
         {
             _stack = new T[size];
-            Count = 0;
+            _size = 0;
         }
 
         // Clear a stack (and free memory) by setting each item to default
         public void Clear()
         {
-            Array.Clear(_stack, 0, Count);
-            Count = 0;
+            Array.Clear(_stack, 0, _size);
+            _size = 0;
         }
 
         // Return an item from the top of the stack
@@ -56,7 +63,7 @@
                 throw new InvalidOperationException("The stack is empty.");
             }
 
-            return _stack[Count - 1];
+            return _stack[_size - 1];
         }
 
         // Remove an item (and free memory) from the top of the stack
@@ -67,10 +74,10 @@
                 throw new InvalidOperationException("The stack is empty.");
             }
 
-            var value = _stack[--Count];
-            _stack[Count] = default;
+            var value = _stack[--_size];
+            _stack[_size] = default;
 
-            if (_stack.Length > _defaultSize && Count < _defaultSize)
+            if (_stack.Length > _defaultSize && _size < _defaultSize)
             {
                 Resize(_defaultSize);
             }
@@ -86,14 +93,14 @@
                 Resize(Math.Max(_defaultSize, _stack.Length * 2));
             }
 
-            _stack[Count++] = value;
+            _stack[_size++] = value;
         }
 
         // Resize a stack
         private void Resize(int size)
         {
             var array = new T[size];
-            Array.Copy(_stack, 0, array, 0, Count);
+            Array.Copy(_stack, 0, array, 0, _size);
             _stack = array;
         }
     }

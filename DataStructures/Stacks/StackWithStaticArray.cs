@@ -6,13 +6,14 @@
     public class StackWithStaticArray<T>
     {
         private readonly T[] _stack;
+        private int _size;
 
         // Represent whether a stack is empty or not
         public bool IsEmpty
         {
             get
             {
-                return Count == 0;
+                return _size == 0;
             }
         }
 
@@ -21,24 +22,30 @@
         {
             get
             {
-                return Count == _stack.Length;
+                return _size == _stack.Length;
             }
         }
 
         // Represent the number of items stored in a stack
-        public int Count { get; private set; }
+        public int Count
+        {
+            get
+            {
+                return _size;
+            }
+        }
 
         public StackWithStaticArray(int size)
         {
             _stack = new T[size];
-            Count = 0;
+            _size = 0;
         }
 
         // Clear a stack (and free memory) by setting each item to default
         public void Clear()
         {
-            Array.Clear(_stack, 0, Count);
-            Count = 0;
+            Array.Clear(_stack, 0, _size);
+            _size = 0;
         }
 
         // Return an item from the top of the stack
@@ -49,7 +56,7 @@
                 throw new InvalidOperationException("The stack is empty.");
             }
 
-            return _stack[Count - 1];
+            return _stack[_size - 1];
         }
 
         // Remove an item (and free memory) from the top of the stack
@@ -60,8 +67,8 @@
                 throw new InvalidOperationException("The stack is empty.");
             }
 
-            var value = _stack[--Count];
-            _stack[Count] = default;
+            var value = _stack[--_size];
+            _stack[_size] = default;
             return value;
         }
 
@@ -73,7 +80,7 @@
                 throw new InvalidOperationException("The stack is full.");
             }
 
-            _stack[Count++] = value;
+            _stack[_size++] = value;
         }
     }
 }

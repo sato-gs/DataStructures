@@ -6,18 +6,25 @@
     public class StackWithLinkedList<T>
     {
         private Node<T> _head;
+        private int _size;
 
         // Represent whether a stack is empty or not
         public bool IsEmpty
         {
             get
             {
-                return Count == 0;
+                return _size == 0;
             }
         }
 
         // Represent the number of items stored in a stack
-        public int Count { get; private set; }
+        public int Count
+        {
+            get
+            {
+                return _size;
+            }
+        }
 
         // Clear a stack (and free memory) by letting GC take charge
         public void Clear()
@@ -31,7 +38,7 @@
             }
 
             _head = null;
-            Count = 0;
+            _size = 0;
         }
 
         // Return an item from the top of the stack
@@ -55,7 +62,7 @@
 
             var item = _head;
             _head = item.Next;
-            Count--;
+            _size--;
             return item.Value;
         }
 
@@ -63,7 +70,7 @@
         public void Push(T value)
         {
             var node = new Node<T>(value, _head);
-            Count++;
+            _size++;
             _head = node;
         }
 
