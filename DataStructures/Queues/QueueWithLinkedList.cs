@@ -2,6 +2,7 @@
 {
     using System;
 
+    // Queue implemented using linked list
     public class QueueWithLinkedList<T>
     {
         // Represent the front of the queue

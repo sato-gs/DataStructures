@@ -7,12 +7,12 @@
     public class StackWithStaticArrayTests
     {
         private StackWithStaticArray<int> _stack;
-        private readonly int _size = 5;
+        private readonly int _capacity = 5;
 
         [SetUp]
         public void SetUp()
         {
-            _stack = new StackWithStaticArray<int>(_size);
+            _stack = new StackWithStaticArray<int>(_capacity);
         }
 
         [Test]
@@ -39,7 +39,7 @@
         public void IsFull_WhenStackIsFull_ShouldReturnTrue()
         {
             // Arrange
-            for (var i = 1; i <= _size; i++)
+            for (var i = 1; i <= _capacity; i++)
             {
                 _stack.Push(i);
             }
@@ -165,7 +165,7 @@
         public void Push_WhenStackIsFull_ShouldThrowInvalidOperationException()
         {
             // Arrange
-            for (var i = 1; i <= _size; i++)
+            for (var i = 1; i <= _capacity; i++)
             {
                 _stack.Push(i);
             }

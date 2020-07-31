@@ -2,6 +2,7 @@
 {
     using System;
 
+    // Queue implemented using dynamic Array (e.g. Array with resize feature)
     public class QueueWithDynamicArray<T>
     {
         // Represent the queue
@@ -10,8 +11,8 @@
         private readonly int _front;
         // Represent the back of the queue
         private int _back;
-        // Represent the default size of the queue
-        private readonly int _defaultSize = 5;
+        // Represent the default capacity of the queue
+        private readonly int _defaultCapacity = 5;
 
         // Represent whether the queue is empty or not
         public bool IsEmpty
@@ -42,7 +43,7 @@
 
         public QueueWithDynamicArray()
         {
-            _queue = new T[_defaultSize];
+            _queue = new T[_defaultCapacity];
             _front = _back = 0;
         }
 
@@ -75,9 +76,9 @@
             // Reset the back of the queue (which is not processed above)
             _queue[--_back] = default;
 
-            if (_queue.Length > _defaultSize && _back < _queue.Length / 2)
+            if (_queue.Length > _defaultCapacity && _back < _queue.Length / 2)
             {
-                Resize(Math.Max(_defaultSize, _queue.Length / 2));
+                Resize(Math.Max(_defaultCapacity, _queue.Length / 2));
             }
 
             return item;
@@ -88,7 +89,7 @@
         {
             if (IsFull)
             {
-                Resize(Math.Max(_defaultSize, _queue.Length * 2));
+                Resize(Math.Max(_defaultCapacity, _queue.Length * 2));
             }
 
             _queue[_back++] = value;

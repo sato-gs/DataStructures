@@ -7,12 +7,12 @@
     public class StackWithDynamicArrayTests
     {
         private StackWithDynamicArray<int> _stack;
-        private readonly int _size = 5;
+        private readonly int _capacity = 5;
 
         [SetUp]
         public void SetUp()
         {
-            _stack = new StackWithDynamicArray<int>(_size);
+            _stack = new StackWithDynamicArray<int>(_capacity);
         }
 
         [Test]
@@ -39,7 +39,7 @@
         public void IsFull_WhenStackIsFull_ShouldReturnTrue()
         {
             // Arrange
-            for (var i = 1; i <= _size; i++)
+            for (var i = 1; i <= _capacity; i++)
             {
                 _stack.Push(i);
             }
@@ -171,10 +171,10 @@
         [TestCase(100, 1)]
         [TestCase(100, 10)]
         [TestCase(100, 100)]
-        public void Push_WhenCalled_ShouldAddItemToTopOfStack(int size, int range)
+        public void Push_WhenCalled_ShouldAddItemToTopOfStack(int capacity, int range)
         {
             // Arrange
-            _stack = new StackWithDynamicArray<int>(size);
+            _stack = new StackWithDynamicArray<int>(capacity);
 
             // Act
             for (var i = 1; i <= range; i++)

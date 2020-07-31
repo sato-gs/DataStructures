@@ -5,10 +5,12 @@
     // Stack implemented using static Array (e.g. Array without resize feature)
     public class StackWithStaticArray<T>
     {
+        // Represent the stack
         private readonly T[] _stack;
+        // Represent the current size of the stack
         private int _size;
 
-        // Represent whether a stack is empty or not
+        // Represent whether the stack is empty or not
         public bool IsEmpty
         {
             get
@@ -17,7 +19,7 @@
             }
         }
 
-        // Represent whether a stack is full or not
+        // Represent whether the stack is full or not
         public bool IsFull
         {
             get
@@ -26,7 +28,7 @@
             }
         }
 
-        // Represent the number of items stored in a stack
+        // Represent the number of items stored in the stack
         public int Count
         {
             get
@@ -35,13 +37,13 @@
             }
         }
 
-        public StackWithStaticArray(int size)
+        public StackWithStaticArray(int capacity)
         {
-            _stack = new T[size];
+            _stack = new T[capacity];
             _size = 0;
         }
 
-        // Clear a stack (and free memory) by setting each item to default
+        // Clear the stack (and free memory) by setting each item to default
         public void Clear()
         {
             Array.Clear(_stack, 0, _size);

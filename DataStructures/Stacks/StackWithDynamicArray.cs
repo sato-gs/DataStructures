@@ -5,11 +5,14 @@
     // Stack implemented using dynamic Array (e.g. Array with resize feature)
     public class StackWithDynamicArray<T>
     {
+        // Represent the stack
         private T[] _stack;
+        // Represent the current size of the stack
         private int _size;
-        private readonly int _defaultSize = 5;
+        // Represent the default capacity of the stack
+        private readonly int _defaultCapacity = 5;
 
-        // Represent whether a stack is empty or not
+        // Represent whether the stack is empty or not
         public bool IsEmpty
         {
             get
@@ -18,7 +21,7 @@
             }
         }
 
-        // Represent whether a stack is full or not
+        // Represent whether the stack is full or not
         public bool IsFull
         {
             get
@@ -27,7 +30,7 @@
             }
         }
 
-        // Represent the number of items stored in a stack
+        // Represent the number of items stored in the stack
         public int Count
         {
             get
@@ -38,17 +41,17 @@
 
         public StackWithDynamicArray()
         {
-            _stack = new T[_defaultSize];
+            _stack = new T[_defaultCapacity];
             _size = 0;
         }
 
-        public StackWithDynamicArray(int size)
+        public StackWithDynamicArray(int capacity)
         {
-            _stack = new T[size];
+            _stack = new T[capacity];
             _size = 0;
         }
 
-        // Clear a stack (and free memory) by setting each item to default
+        // Clear the stack (and free memory) by setting each item to default
         public void Clear()
         {
             Array.Clear(_stack, 0, _size);
@@ -77,9 +80,9 @@
             var value = _stack[--_size];
             _stack[_size] = default;
 
-            if (_stack.Length > _defaultSize && _size < _stack.Length / 2)
+            if (_stack.Length > _defaultCapacity && _size < _stack.Length / 2)
             {
-                Resize(Math.Max(_defaultSize, _stack.Length / 2));
+                Resize(Math.Max(_defaultCapacity, _stack.Length / 2));
             }
 
             return value;
@@ -90,13 +93,13 @@
         {
             if (IsFull)
             {
-                Resize(Math.Max(_defaultSize, _stack.Length * 2));
+                Resize(Math.Max(_defaultCapacity, _stack.Length * 2));
             }
 
             _stack[_size++] = value;
         }
 
-        // Resize a stack
+        // Resize the stack
         private void Resize(int size)
         {
             var array = new T[size];

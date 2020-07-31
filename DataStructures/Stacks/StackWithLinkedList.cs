@@ -5,10 +5,12 @@
     // Stack implemented using linked list
     public class StackWithLinkedList<T>
     {
+        // Represent the top of the stack
         private Node<T> _top;
+        // Represent the current size of the stack
         private int _size;
 
-        // Represent whether a stack is empty or not
+        // Represent whether the stack is empty or not
         public bool IsEmpty
         {
             get
@@ -17,7 +19,7 @@
             }
         }
 
-        // Represent the number of items stored in a stack
+        // Represent the number of items stored in the stack
         public int Count
         {
             get
@@ -26,7 +28,7 @@
             }
         }
 
-        // Clear a stack (and free memory) by letting GC take charge
+        // Clear the stack (and free memory) by letting GC take charge
         public void Clear()
         {
             var cur = _top;

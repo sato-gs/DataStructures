@@ -2,6 +2,7 @@
 {
     using System;
 
+    // Queue implemented using static Array (e.g. Array without resize feature)
     public class QueueWithStaticArray<T>
     {
         // Represent the queue
