@@ -4,11 +4,14 @@
 
     public class QueueWithStaticArray<T>
     {
+        // Represent the queue
         private readonly T[] _queue;
+        // Represent the front of the queue
         private readonly int _front;
+        // Represent the back of the queue
         private int _back;
 
-        // Represent whether a queue is empty or not
+        // Represent whether the queue is empty or not
         public bool IsEmpty
         {
             get
@@ -17,7 +20,7 @@
             }
         }
 
-        // Represent whether a queue is full or not
+        // Represent whether the queue is full or not
         public bool IsFull
         {
             get
@@ -26,7 +29,7 @@
             }
         }
 
-        // Represent the number of items stored in a queue
+        // Represent the number of items stored in the queue
         public int Count
         {
             get
@@ -35,13 +38,13 @@
             }
         }
 
-        public QueueWithStaticArray(int size)
+        public QueueWithStaticArray(int capacity)
         {
-            _queue = new T[size];
+            _queue = new T[capacity];
             _front = _back = 0;
         }
 
-        // Clear a queue (and free memory) by setting each item to default
+        // Clear the queue (and free memory) by setting each item to default
         public void Clear()
         {
             Array.Clear(_queue, _front, _back);

@@ -7,12 +7,12 @@
     public class QueueWithStaticArrayTests
     {
         private QueueWithStaticArray<int> _queue;
-        private readonly int _size = 5;
+        private readonly int _capacity = 5;
 
         [SetUp]
         public void SetUp()
         {
-            _queue = new QueueWithStaticArray<int>(_size);
+            _queue = new QueueWithStaticArray<int>(_capacity);
         }
 
         [Test]
@@ -39,7 +39,7 @@
         public void IsFull_WhenQueueIsFull_ShouldReturnTrue()
         {
             // Arrange
-            for (var i = 1; i <= _size; i++)
+            for (var i = 1; i <= _capacity; i++)
             {
                 _queue.Enqueue(i);
             }
@@ -137,7 +137,7 @@
         public void Enqueue_WhenQueueIsFull_ShouldThrowInvalidOperationException()
         {
             // Arrange
-            for (var i = 1; i <= _size; i++)
+            for (var i = 1; i <= _capacity; i++)
             {
                 _queue.Enqueue(i);
             }

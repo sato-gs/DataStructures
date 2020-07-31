@@ -7,12 +7,12 @@
     public class QueueWithDynamicArrayTests
     {
         private QueueWithDynamicArray<int> _queue;
-        private readonly int _size = 5;
+        private readonly int _capacity = 5;
 
         [SetUp]
         public void SetUp()
         {
-            _queue = new QueueWithDynamicArray<int>(_size);
+            _queue = new QueueWithDynamicArray<int>(_capacity);
         }
 
         [Test]
@@ -39,7 +39,7 @@
         public void IsFull_WhenQueueIsFull_ShouldReturnTrue()
         {
             // Arrange
-            for (var i = 1; i <= _size; i++)
+            for (var i = 1; i <= _capacity; i++)
             {
                 _queue.Enqueue(i);
             }
@@ -143,10 +143,10 @@
         [TestCase(100, 1)]
         [TestCase(100, 10)]
         [TestCase(100, 100)]
-        public void Enqueue_WhenCalled_ShouldAddItemToBackOfQueue(int size, int range)
+        public void Enqueue_WhenCalled_ShouldAddItemToBackOfQueue(int capacity, int range)
         {
             // Arrange
-            _queue = new QueueWithDynamicArray<int>(size);
+            _queue = new QueueWithDynamicArray<int>(capacity);
 
             // Act
             for (var i = 1; i <= range; i++)

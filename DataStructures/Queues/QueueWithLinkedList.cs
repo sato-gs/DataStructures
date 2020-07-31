@@ -4,11 +4,14 @@
 
     public class QueueWithLinkedList<T>
     {
+        // Represent the front of the queue
         private Node<T> _front;
+        // Represent the back of the queue
         private Node<T> _back;
+        // Represent the current size of the queue
         private int _size;
 
-        // Represent whether a queue is empty or not
+        // Represent whether the queue is empty or not
         public bool IsEmpty
         {
             get
@@ -17,7 +20,7 @@
             }
         }
 
-        // Represent the number of items stored in a queue
+        // Represent the number of items stored in the queue
         public int Count
         {
             get
@@ -26,7 +29,7 @@
             }
         }
 
-        // Clear a queue (and free memory) by letting GC take charge
+        // Clear the queue (and free memory) by letting GC take charge
         public void Clear()
         {
             var cur = _front;

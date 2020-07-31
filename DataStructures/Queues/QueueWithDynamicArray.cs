@@ -4,12 +4,16 @@
 
     public class QueueWithDynamicArray<T>
     {
+        // Represent the queue
         private T[] _queue;
+        // Represent the front of the queue
         private readonly int _front;
+        // Represent the back of the queue
         private int _back;
+        // Represent the default size of the queue
         private readonly int _defaultSize = 5;
 
-        // Represent whether a queue is empty or not
+        // Represent whether the queue is empty or not
         public bool IsEmpty
         {
             get
@@ -18,7 +22,7 @@
             }
         }
 
-        // Represent whether a queue is full or not
+        // Represent whether the queue is full or not
         public bool IsFull
         {
             get
@@ -27,7 +31,7 @@
             }
         }
 
-        // Represent the number of items stored in a queue
+        // Represent the number of items stored in the queue
         public int Count
         {
             get
@@ -42,13 +46,13 @@
             _front = _back = 0;
         }
 
-        public QueueWithDynamicArray(int size)
+        public QueueWithDynamicArray(int capacity)
         {
-            _queue = new T[size];
+            _queue = new T[capacity];
             _front = _back = 0;
         }
 
-        // Clear a queue (and free memory) by setting each item to default
+        // Clear the queue (and free memory) by setting each item to default
         public void Clear()
         {
             Array.Clear(_queue, _front, _back);
@@ -101,10 +105,10 @@
             return _queue[_front];
         }
 
-        // Resize a queue
-        private void Resize(int size)
+        // Resize the queue
+        private void Resize(int capacity)
         {
-            var array = new T[size];
+            var array = new T[capacity];
             Array.Copy(_queue, 0, array, 0, _back);
             _queue = array;
         }
