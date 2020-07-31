@@ -5,9 +5,9 @@
     // Doubly linked list without tail
     public class DoublyLinkedList<T>
     {
-        // Represent the current size of linked list
+        // Represent the current size of the linked list
         public int Size { get; private set; }
-        // Represent the current head of linked list
+        // Represent the current head of the linked list
         public Node<T> Head { get; private set; }
 
         // Get a node at the specified index
