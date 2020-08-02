@@ -79,12 +79,6 @@
 
             var value = _stack[--_size];
             _stack[_size] = default;
-
-            if (_stack.Length > _defaultCapacity && _size < _stack.Length / 2)
-            {
-                Resize(Math.Max(_defaultCapacity, _stack.Length / 2));
-            }
-
             return value;
         }
 

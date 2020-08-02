@@ -75,13 +75,6 @@
             _front = (_front + 1) % _queue.Length;
             _size--;
 
-            // Resizing circular queue upon dequeing is not an easy task, therefore omitted
-            // The following code does not work
-            //if (_queue.Length > _defaultCapacity && _size < _queue.Length / 2)
-            //{
-            //    Resize(Math.Max(_defaultCapacity, _queue.Length / 2));
-            //}
-
             return item;
         }
 

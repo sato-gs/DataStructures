@@ -75,12 +75,6 @@
             }
             // Reset the back of the queue (which is not processed above)
             _queue[--_back] = default;
-
-            if (_queue.Length > _defaultCapacity && _back < _queue.Length / 2)
-            {
-                Resize(Math.Max(_defaultCapacity, _queue.Length / 2));
-            }
-
             return item;
         }
 
