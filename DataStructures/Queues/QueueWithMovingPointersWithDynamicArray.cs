@@ -2,8 +2,8 @@
 {
     using System;
 
-    // Circular queue implemented using dynamic Array (e.g. Array with resize feature)
-    public class CircularQueueWithDynamicArray<T>
+    // Queue with moving pointers implemented using dynamic Array (e.g. Array with resize feature)
+    public class QueueWithMovingPointersWithDynamicArray<T>
     {
         // Represent the queue
         private T[] _queue;
@@ -43,13 +43,13 @@
             }
         }
 
-        public CircularQueueWithDynamicArray()
+        public QueueWithMovingPointersWithDynamicArray()
         {
             _queue = new T[_defaultCapacity];
             _front = _back = _size = 0;
         }
 
-        public CircularQueueWithDynamicArray(int capacity)
+        public QueueWithMovingPointersWithDynamicArray(int capacity)
         {
             _queue = new T[capacity];
             _front = _back = _size = 0;

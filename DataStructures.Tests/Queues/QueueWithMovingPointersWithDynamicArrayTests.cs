@@ -4,15 +4,15 @@
     using DataStructures.Queues;
     using NUnit.Framework;
 
-    public class CircularQueueWithDynamicArrayTests
+    public class QueueWithMovingPointersWithDynamicArrayTests
     {
-        private CircularQueueWithDynamicArray<int> _queue;
+        private QueueWithMovingPointersWithDynamicArray<int> _queue;
         private readonly int _capacity = 5;
 
         [SetUp]
         public void SetUp()
         {
-            _queue = new CircularQueueWithDynamicArray<int>(_capacity);
+            _queue = new QueueWithMovingPointersWithDynamicArray<int>(_capacity);
         }
 
         [Test]
@@ -146,7 +146,7 @@
         public void Enqueue_WhenCalled_ShouldAddItemToBackOfQueue(int capacity, int range)
         {
             // Arrange
-            _queue = new CircularQueueWithDynamicArray<int>(capacity);
+            _queue = new QueueWithMovingPointersWithDynamicArray<int>(capacity);
 
             // Act
             for (var i = 1; i <= range; i++)

@@ -2,8 +2,8 @@
 {
     using System;
 
-    // Circular queue implemented using static Array (e.g. Array without resize feature)
-    public class CircularQueueWithStaticArray<T>
+    // Queue with moving pointers implemented using static Array (e.g. Array without resize feature)
+    public class QueueWithMovingPointersWithStaticArray<T>
     {
         // Represent the queue
         private readonly T[] _queue;
@@ -41,7 +41,7 @@
             }
         }
 
-        public CircularQueueWithStaticArray(int capacity)
+        public QueueWithMovingPointersWithStaticArray(int capacity)
         {
             _queue = new T[capacity];
             _front = _back = _size = 0;

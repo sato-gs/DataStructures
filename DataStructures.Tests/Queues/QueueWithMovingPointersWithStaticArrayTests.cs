@@ -4,15 +4,15 @@
     using DataStructures.Queues;
     using NUnit.Framework;
 
-    public class CircularQueueWithStaticArrayTests
+    public class QueueWithMovingPointersWithStaticArrayTests
     {
-        private CircularQueueWithStaticArray<int> _queue;
+        private QueueWithMovingPointersWithStaticArray<int> _queue;
         private readonly int _capacity = 5;
 
         [SetUp]
         public void SetUp()
         {
-            _queue = new CircularQueueWithStaticArray<int>(_capacity);
+            _queue = new QueueWithMovingPointersWithStaticArray<int>(_capacity);
         }
 
         [Test]
