@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
 
+    // Max heap implemented using static Array (e.g. Array without resize feature)
     public class MaxHeapWithStaticArray<T>
     {
         // Represent the heap

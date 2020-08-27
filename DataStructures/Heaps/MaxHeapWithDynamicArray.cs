@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
 
+    // Max heap implemented using dynamic Array (e.g. Array with resize feature)
     public class MaxHeapWithDynamicArray<T>
     {
         // Represent the heap

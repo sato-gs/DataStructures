@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
 
+    // Min heap implemented using dynamic Array (e.g. Array with resize feature)
     public class MinHeapWithDynamicArray<T>
     {
         // Represent the heap

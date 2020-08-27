@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
 
+    // Min heap implemented using static Array (e.g. Array without resize feature)
     public class MinHeapWithStaticArray<T>
     {
         // Represent the heap
