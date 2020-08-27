@@ -10,7 +10,7 @@
         private T[] _heap;
         // Represent the current size of the heap
         private int _size;
-        // Represent the default capacity of the stack
+        // Represent the default capacity of the heap
         private readonly int _defaultCapacity = 5;
 
         // Represent whether the heap is empty or not
