@@ -4,9 +4,12 @@
     using System.Collections.Generic;
     using System.Text;
 
+    // Directed graph implemented using an adjacency list
     public class DirectedListGraph
     {
+        // Represent the number of vertices
         private readonly int _numberOfVertices;
+        // Represent vertices (e.g. indices as vertices and lists as their neighbours)
         private readonly List<int>[] _vertices;
 
         public DirectedListGraph(int numberOfVertices)
@@ -19,6 +22,7 @@
             }
         }
 
+        // Add a directed edge from a given vertex to a given vertex
         public bool AddEdge(int from, int to)
         {
             if (from < 0
@@ -38,6 +42,7 @@
             return notExist;
         }
 
+        // Remove a directed edge from a given vertex to a given vertex
         public bool RemoveEdge(int from, int to)
         {
             if (from < 0
@@ -57,11 +62,13 @@
             return exist;
         }
 
+        // Check whether a directed edge exists from a given vertex to a given vertex (as a test helper function)
         public bool EdgeAt(int from, int to)
         {
             return _vertices[from].Contains(to);
         }
 
+        // Return a string representing a graph itself
         public override string ToString()
         {
             var sb = new StringBuilder();
