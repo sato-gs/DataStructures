@@ -1,18 +1,19 @@
-﻿namespace DataStructures.Tests.Lists
+﻿namespace DataStructures.Tests.Lists.Sub
 {
     using System;
-    using DataStructures.Lists;
+    using DataStructures.Lists.Sub;
     using NUnit.Framework;
-    using static DataStructures.Lists.SinglyLinkedList<int>;
+    using static DataStructures.Lists.Sub.SinglyLinkedListWithTail<int>;
 
-    public class SinglyLinkedListTests
+    public class SinglyLinkedListWithTailTests
     {
-        private SinglyLinkedList<int> _list;
+
+        private SinglyLinkedListWithTail<int> _list;
 
         [SetUp]
         public void SetUp()
         {
-            _list = new SinglyLinkedList<int>();
+            _list = new SinglyLinkedListWithTail<int>();
         }
 
         [Test]
@@ -142,6 +143,10 @@
             Assert.That(result.Next, Is.EqualTo(next));
             Assert.That(_list.Size, Is.EqualTo(prevSize + 1));
             Assert.That(_list.Head, Is.EqualTo(result));
+            if (prevSize == 0)
+            {
+                Assert.That(_list.Tail, Is.EqualTo(result));
+            }
         }
 
         [Test]
@@ -170,6 +175,7 @@
             Assert.That(prev?.Next, Is.EqualTo(range == 0 ? null : result));
             Assert.That(result.Next, Is.Null);
             Assert.That(_list.Size, Is.EqualTo(prevSize + 1));
+            Assert.That(_list.Tail, Is.EqualTo(result));
             if (prevSize == 0)
             {
                 Assert.That(_list.Head, Is.EqualTo(result));
@@ -278,6 +284,7 @@
             }
             Assert.That(prev?.Next, Is.Null);
             Assert.That(_list.Size, Is.EqualTo(Math.Max(0, prevSize - 1)));
+            Assert.That(_list.Tail, Is.EqualTo(prev));
         }
 
         [Test]
@@ -291,6 +298,7 @@
             {
                 _list.AddLast(i);
             }
+            var head = _list.GetAt(0);
             var tail = _list.GetAt(_list.Size - 1);
 
             // Act
@@ -306,6 +314,7 @@
                     .And.Property(nameof(Node<int>.Value)).EqualTo(range - 1 - i));
             }
             Assert.That(_list.Head, Is.EqualTo(tail));
+            Assert.That(_list.Tail, Is.EqualTo(head));
         }
     }
 }

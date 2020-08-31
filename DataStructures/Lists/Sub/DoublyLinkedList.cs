@@ -1,4 +1,4 @@
-﻿namespace DataStructures.Lists
+﻿namespace DataStructures.Lists.Sub
 {
     using System;
 

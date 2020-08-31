@@ -1,19 +1,18 @@
-﻿namespace DataStructures.Tests.Lists
+﻿namespace DataStructures.Tests.Lists.Sub
 {
     using System;
-    using DataStructures.Lists;
+    using DataStructures.Lists.Sub;
     using NUnit.Framework;
-    using static DataStructures.Lists.SinglyLinkedListWithTail<int>;
+    using static DataStructures.Lists.Sub.DoublyLinkedListWithTail<int>;
 
-    public class SinglyLinkedListWithTailTests
+    public class DoublyLinkedListWithTailTests
     {
-
-        private SinglyLinkedListWithTail<int> _list;
+        private DoublyLinkedListWithTail<int> _list;
 
         [SetUp]
         public void SetUp()
         {
-            _list = new SinglyLinkedListWithTail<int>();
+            _list = new DoublyLinkedListWithTail<int>();
         }
 
         [Test]
@@ -113,7 +112,9 @@
                 Is.Not.Null
                 .And.Property(nameof(Node<int>.Value)).EqualTo(value));
             Assert.That(prev?.Next, Is.EqualTo(index == 0 ? null : result));
+            Assert.That(result.Prev, Is.EqualTo(prev));
             Assert.That(result.Next, Is.EqualTo(next));
+            Assert.That(next?.Prev, Is.EqualTo(index == prevSize ? null : result));
             Assert.That(_list.Size, Is.EqualTo(prevSize + 1));
         }
 
@@ -140,7 +141,9 @@
                 result,
                 Is.Not.Null
                 .And.Property(nameof(Node<int>.Value)).EqualTo(value));
+            Assert.That(result.Prev, Is.Null);
             Assert.That(result.Next, Is.EqualTo(next));
+            Assert.That(next?.Prev, Is.EqualTo(range == 0 ? null : result));
             Assert.That(_list.Size, Is.EqualTo(prevSize + 1));
             Assert.That(_list.Head, Is.EqualTo(result));
             if (prevSize == 0)
@@ -173,6 +176,7 @@
                 Is.Not.Null
                 .And.Property(nameof(Node<int>.Value)).EqualTo(value));
             Assert.That(prev?.Next, Is.EqualTo(range == 0 ? null : result));
+            Assert.That(result.Prev, Is.EqualTo(prev));
             Assert.That(result.Next, Is.Null);
             Assert.That(_list.Size, Is.EqualTo(prevSize + 1));
             Assert.That(_list.Tail, Is.EqualTo(result));
@@ -215,6 +219,7 @@
                 Is.Not.Null
                 .And.Property(nameof(Node<int>.Value)).EqualTo(index));
             Assert.That(prev?.Next, Is.EqualTo(index == 0 ? null : next));
+            Assert.That(next?.Prev, Is.EqualTo(index == prevSize - 1 ? null : prev));
             Assert.That(_list.Size, Is.EqualTo(prevSize - 1));
         }
 
@@ -248,6 +253,7 @@
                     .And.Property(nameof(Node<int>.Value)).EqualTo(0));
                 Assert.That(_list.GetAt(0), Is.Not.EqualTo(result));
             }
+            Assert.That(head?.Prev, Is.Null);
             Assert.That(_list.Size, Is.EqualTo(Math.Max(0, prevSize - 1)));
             Assert.That(_list.Head, Is.EqualTo(head));
         }
