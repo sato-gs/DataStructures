@@ -1,4 +1,4 @@
-﻿namespace DataStructures.BinaryTrees
+﻿namespace DataStructures.BinaryTrees.Sub
 {
     using System.Collections.Generic;
     using System.Diagnostics;

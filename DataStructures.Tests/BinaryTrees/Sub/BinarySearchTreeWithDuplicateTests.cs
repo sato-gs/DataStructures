@@ -1,13 +1,13 @@
-﻿namespace DataStructures.Tests.BinaryTrees
+﻿namespace DataStructures.Tests.BinaryTrees.Sub
 {
     using System.Collections.Generic;
     using System.Linq;
-    using DataStructures.BinaryTrees;
+    using DataStructures.BinaryTrees.Sub;
     using NUnit.Framework;
-
-    public class BinarySearchTreeTests
+    
+    public class BinarySearchTreeWithDuplicateTests
     {
-        private BinarySearchTree<int> _tree;
+        private BinarySearchTreeWithDuplicate<int> _tree;
         private readonly List<int> _values = new List<int>() { 5, 3, 7, 2, 4, 6, 9, 1, 8, 10 };
         /*
                         5
@@ -22,7 +22,7 @@
         [SetUp]
         public void SetUp()
         {
-            _tree = new BinarySearchTree<int>();
+            _tree = new BinarySearchTreeWithDuplicate<int>();
         }
 
         [Test]
@@ -126,7 +126,9 @@
                     result,
                     Is.Not.Null
                     .And.Property(nameof(BinarySearchTreeWithDuplicate<int>.Node<int>.Value))
-                    .EqualTo(val));
+                    .EqualTo(val)
+                    .And.Property(nameof(BinarySearchTreeWithDuplicate<int>.Node<int>.Counter))
+                    .EqualTo(1));
             });
         }
 
@@ -134,7 +136,7 @@
         [TestCase(1)]
         [TestCase(5)]
         [TestCase(10)]
-        public void Insert_WhenNodeExists_ShouldIgnore(int value)
+        public void Insert_WhenNodeExists_ShouldIncrementNode(int value)
         {
             // Arrange
             _values.ForEach(val => _tree.Insert(val));
@@ -150,7 +152,9 @@
                     result,
                     Is.Not.Null
                     .And.Property(nameof(BinarySearchTreeWithDuplicate<int>.Node<int>.Value))
-                    .EqualTo(val));
+                    .EqualTo(val)
+                    .And.Property(nameof(BinarySearchTreeWithDuplicate<int>.Node<int>.Counter))
+                    .EqualTo(val != value ? 1 : 2));
             });
         }
 
@@ -174,7 +178,9 @@
                     result,
                     Is.Not.Null
                     .And.Property(nameof(BinarySearchTreeWithDuplicate<int>.Node<int>.Value))
-                    .EqualTo(val));
+                    .EqualTo(val)
+                    .And.Property(nameof(BinarySearchTreeWithDuplicate<int>.Node<int>.Counter))
+                    .EqualTo(1));
             });
         }
 
@@ -206,13 +212,42 @@
                         result,
                         Is.Not.Null
                         .And.Property(nameof(BinarySearchTreeWithDuplicate<int>.Node<int>.Value))
-                        .EqualTo(val));
+                        .EqualTo(val)
+                        .And.Property(nameof(BinarySearchTreeWithDuplicate<int>.Node<int>.Counter))
+                        .EqualTo(1));
                 }
             });
             foreach (var (val, index) in _tree.LevelOrderTraverse().Select((val, index) => (val, index)))
             {
                 Assert.That(expected[index], Is.EqualTo(val));
             }
+        }
+
+        [Test]
+        [TestCase(1)]
+        [TestCase(5)]
+        [TestCase(10)]
+        public void Delete_WhenDuplicateNodeExists_ShouldDecrementNode(int value)
+        {
+            // Arrange
+            _values.ForEach(val => _tree.Insert(val));
+            _tree.Insert(value);
+
+            // Act
+            _tree.Delete(value);
+
+            // Assert
+            _values.ForEach(val =>
+            {
+                var result = _tree.Find(val);
+                Assert.That(
+                    result,
+                    Is.Not.Null
+                    .And.Property(nameof(BinarySearchTreeWithDuplicate<int>.Node<int>.Value))
+                    .EqualTo(val)
+                    .And.Property(nameof(BinarySearchTreeWithDuplicate<int>.Node<int>.Counter))
+                    .EqualTo(1));
+            });
         }
 
         [Test]
