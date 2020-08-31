@@ -1,4 +1,4 @@
-﻿namespace DataStructures.Queues
+﻿namespace DataStructures.Queues.Sub
 {
     using System;
 

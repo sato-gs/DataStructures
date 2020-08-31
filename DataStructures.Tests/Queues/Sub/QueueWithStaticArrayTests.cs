@@ -1,17 +1,18 @@
-﻿namespace DataStructures.Tests.Queues
+﻿namespace DataStructures.Tests.Queues.Sub
 {
     using System;
-    using DataStructures.Queues;
+    using DataStructures.Queues.Sub;
     using NUnit.Framework;
 
-    public class QueueWithLinkedListTests
+    public class QueueWithStaticArrayTests
     {
-        private QueueWithLinkedList<int> _queue;
+        private QueueWithStaticArray<int> _queue;
+        private readonly int _capacity = 5;
 
         [SetUp]
         public void SetUp()
         {
-            _queue = new QueueWithLinkedList<int>();
+            _queue = new QueueWithStaticArray<int>(_capacity);
         }
 
         [Test]
@@ -32,6 +33,29 @@
 
             // Assert
             Assert.That(result, Is.EqualTo(false));
+        }
+
+        [Test]
+        public void IsFull_WhenQueueIsFull_ShouldReturnTrue()
+        {
+            // Arrange
+            for (var i = 1; i <= _capacity; i++)
+            {
+                _queue.Enqueue(i);
+            }
+
+            // Act
+            var result = _queue.IsFull;
+
+            // Assert
+            Assert.That(result, Is.EqualTo(true));
+        }
+
+        [Test]
+        public void IsFull_WhenQueueIsNotFull_ShouldReturnFalse()
+        {
+            // Arrange & Act & Assert
+            Assert.That(_queue.IsFull, Is.EqualTo(false));
         }
 
         [Test]
@@ -110,12 +134,25 @@
         }
 
         [Test]
+        public void Enqueue_WhenQueueIsFull_ShouldThrowInvalidOperationException()
+        {
+            // Arrange
+            for (var i = 1; i <= _capacity; i++)
+            {
+                _queue.Enqueue(i);
+            }
+
+            // Act & Assert
+            Assert.Throws<InvalidOperationException>(() => _queue.Enqueue(100));
+        }
+
+        [Test]
         [TestCase(1)]
         [TestCase(2)]
         [TestCase(3)]
         [TestCase(4)]
         [TestCase(5)]
-        public void Enqueue_WhenCalled_ShouldAddItemToBackOfQueue(int range)
+        public void Enqueue_WhenQueueIsNotFull_ShouldAddItemToBackOfQueue(int range)
         {
             // Arrange & Act
             for (var i = 1; i <= range; i++)

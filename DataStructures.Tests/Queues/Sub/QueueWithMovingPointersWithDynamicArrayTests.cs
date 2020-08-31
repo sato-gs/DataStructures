@@ -1,18 +1,18 @@
-﻿namespace DataStructures.Tests.Queues
+﻿namespace DataStructures.Tests.Queues.Sub
 {
     using System;
-    using DataStructures.Queues;
+    using DataStructures.Queues.Sub;
     using NUnit.Framework;
 
-    public class QueueWithDynamicArrayTests
+    public class QueueWithMovingPointersWithDynamicArrayTests
     {
-        private QueueWithDynamicArray<int> _queue;
+        private QueueWithMovingPointersWithDynamicArray<int> _queue;
         private readonly int _capacity = 5;
 
         [SetUp]
         public void SetUp()
         {
-            _queue = new QueueWithDynamicArray<int>(_capacity);
+            _queue = new QueueWithMovingPointersWithDynamicArray<int>(_capacity);
         }
 
         [Test]
@@ -146,7 +146,7 @@
         public void Enqueue_WhenCalled_ShouldAddItemToBackOfQueue(int capacity, int range)
         {
             // Arrange
-            _queue = new QueueWithDynamicArray<int>(capacity);
+            _queue = new QueueWithMovingPointersWithDynamicArray<int>(capacity);
 
             // Act
             for (var i = 1; i <= range; i++)

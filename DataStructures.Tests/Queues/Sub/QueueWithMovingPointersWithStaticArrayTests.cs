@@ -1,7 +1,7 @@
-﻿namespace DataStructures.Tests.Queues
+﻿namespace DataStructures.Tests.Queues.Sub
 {
     using System;
-    using DataStructures.Queues;
+    using DataStructures.Queues.Sub;
     using NUnit.Framework;
 
     public class QueueWithMovingPointersWithStaticArrayTests

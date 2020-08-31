@@ -1,18 +1,18 @@
-﻿namespace DataStructures.Tests.Queues
+﻿namespace DataStructures.Tests.Queues.Sub
 {
     using System;
-    using DataStructures.Queues;
+    using DataStructures.Queues.Sub;
     using NUnit.Framework;
 
-    public class QueueWithStaticArrayTests
+    public class QueueWithDynamicArrayTests
     {
-        private QueueWithStaticArray<int> _queue;
+        private QueueWithDynamicArray<int> _queue;
         private readonly int _capacity = 5;
 
         [SetUp]
         public void SetUp()
         {
-            _queue = new QueueWithStaticArray<int>(_capacity);
+            _queue = new QueueWithDynamicArray<int>(_capacity);
         }
 
         [Test]
@@ -134,27 +134,21 @@
         }
 
         [Test]
-        public void Enqueue_WhenQueueIsFull_ShouldThrowInvalidOperationException()
+        [TestCase(0, 1)]
+        [TestCase(0, 10)]
+        [TestCase(0, 100)]
+        [TestCase(50, 1)]
+        [TestCase(50, 10)]
+        [TestCase(50, 100)]
+        [TestCase(100, 1)]
+        [TestCase(100, 10)]
+        [TestCase(100, 100)]
+        public void Enqueue_WhenCalled_ShouldAddItemToBackOfQueue(int capacity, int range)
         {
             // Arrange
-            for (var i = 1; i <= _capacity; i++)
-            {
-                _queue.Enqueue(i);
-            }
+            _queue = new QueueWithDynamicArray<int>(capacity);
 
-            // Act & Assert
-            Assert.Throws<InvalidOperationException>(() => _queue.Enqueue(100));
-        }
-
-        [Test]
-        [TestCase(1)]
-        [TestCase(2)]
-        [TestCase(3)]
-        [TestCase(4)]
-        [TestCase(5)]
-        public void Enqueue_WhenQueueIsNotFull_ShouldAddItemToBackOfQueue(int range)
-        {
-            // Arrange & Act
+            // Act
             for (var i = 1; i <= range; i++)
             {
                 _queue.Enqueue(i);

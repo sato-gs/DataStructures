@@ -1,18 +1,17 @@
-﻿namespace DataStructures.Tests.Queues
+﻿namespace DataStructures.Tests.Queues.Sub
 {
     using System;
-    using DataStructures.Queues;
+    using DataStructures.Queues.Sub;
     using NUnit.Framework;
 
-    public class QueueWithMovingPointersWithDynamicArrayTests
+    public class QueueWithLinkedListTests
     {
-        private QueueWithMovingPointersWithDynamicArray<int> _queue;
-        private readonly int _capacity = 5;
+        private QueueWithLinkedList<int> _queue;
 
         [SetUp]
         public void SetUp()
         {
-            _queue = new QueueWithMovingPointersWithDynamicArray<int>(_capacity);
+            _queue = new QueueWithLinkedList<int>();
         }
 
         [Test]
@@ -33,29 +32,6 @@
 
             // Assert
             Assert.That(result, Is.EqualTo(false));
-        }
-
-        [Test]
-        public void IsFull_WhenQueueIsFull_ShouldReturnTrue()
-        {
-            // Arrange
-            for (var i = 1; i <= _capacity; i++)
-            {
-                _queue.Enqueue(i);
-            }
-
-            // Act
-            var result = _queue.IsFull;
-
-            // Assert
-            Assert.That(result, Is.EqualTo(true));
-        }
-
-        [Test]
-        public void IsFull_WhenQueueIsNotFull_ShouldReturnFalse()
-        {
-            // Arrange & Act & Assert
-            Assert.That(_queue.IsFull, Is.EqualTo(false));
         }
 
         [Test]
@@ -134,21 +110,14 @@
         }
 
         [Test]
-        [TestCase(0, 1)]
-        [TestCase(0, 10)]
-        [TestCase(0, 100)]
-        [TestCase(50, 1)]
-        [TestCase(50, 10)]
-        [TestCase(50, 100)]
-        [TestCase(100, 1)]
-        [TestCase(100, 10)]
-        [TestCase(100, 100)]
-        public void Enqueue_WhenCalled_ShouldAddItemToBackOfQueue(int capacity, int range)
+        [TestCase(1)]
+        [TestCase(2)]
+        [TestCase(3)]
+        [TestCase(4)]
+        [TestCase(5)]
+        public void Enqueue_WhenCalled_ShouldAddItemToBackOfQueue(int range)
         {
-            // Arrange
-            _queue = new QueueWithMovingPointersWithDynamicArray<int>(capacity);
-
-            // Act
+            // Arrange & Act
             for (var i = 1; i <= range; i++)
             {
                 _queue.Enqueue(i);
