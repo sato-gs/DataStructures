@@ -1,10 +1,10 @@
-﻿namespace DataStructures.Graphs
+﻿namespace DataStructures.Graphs.Sub
 {
     using System;
     using System.Text;
 
-    // Directed graph implemented using an adjacency matrix
-    public class DirectedMatrixGraph
+    // Undirected weighted graph implemented using an adjacency matrix
+    public class UndirectedWeightedMatrixGraph
     {
         // Represent the number of vertices
         private readonly int _numberOfVertices;
@@ -12,10 +12,8 @@
         private readonly int[,] _matrix;
         // Represent the number indicating that an edge does not exist (e.g. 0)
         private const int EDGE_NOT_EXIST = 0;
-        // Represent the number indicating that an edge exists (e.g. 1)
-        private const int EDGE_EXIST = 1;
 
-        public DirectedMatrixGraph(int numberOfVertices)
+        public UndirectedWeightedMatrixGraph(int numberOfVertices)
         {
             _numberOfVertices = numberOfVertices;
             _matrix = new int[numberOfVertices, numberOfVertices];
@@ -28,8 +26,8 @@
             }
         }
 
-        // Add a directed edge from a given vertex to a given vertex
-        public bool AddEdge(int from, int to)
+        // Add an undirected weighted edge from a given vertex to a given vertex with a given weight
+        public bool AddEdge(int from, int to, int weight)
         {
             if (from < 0
                 || from >= _numberOfVertices
@@ -42,13 +40,13 @@
             var notExist = _matrix[from, to] == EDGE_NOT_EXIST;
             if (notExist)
             {
-                _matrix[from, to] = EDGE_EXIST;
+                _matrix[from, to] = _matrix[to, from] = weight;
             }
 
             return notExist;
         }
 
-        // Remove a directed edge from a given vertex to a given vertex
+        // Remove an undirected weighted edge from a given vertex to a given vertex
         public bool RemoveEdge(int from, int to)
         {
             if (from < 0
@@ -59,19 +57,19 @@
                 throw new InvalidOperationException();
             }
 
-            var exist = _matrix[from, to] == EDGE_EXIST;
+            var exist = _matrix[from, to] != EDGE_NOT_EXIST;
             if (exist)
             {
-                _matrix[from, to] = EDGE_NOT_EXIST;
+                _matrix[from, to] = _matrix[to, from] = EDGE_NOT_EXIST;
             }
 
             return exist;
         }
 
-        // Check whether a directed edge exists from a given vertex to a given vertex (as a test helper function)
+        // Check whether an undirected weighted edge exists from a given vertex to a given vertex (as a test helper function)
         public bool EdgeAt(int from, int to)
         {
-            return _matrix[from, to] == EDGE_EXIST;
+            return _matrix[from, to] != EDGE_NOT_EXIST;
         }
 
         // Return a string representing a graph itself

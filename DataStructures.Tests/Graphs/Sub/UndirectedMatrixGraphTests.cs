@@ -1,7 +1,7 @@
-﻿namespace DataStructures.Tests.Graphs
+﻿namespace DataStructures.Tests.Graphs.Sub
 {
     using System;
-    using DataStructures.Graphs;
+    using DataStructures.Graphs.Sub;
     using NUnit.Framework;
 
     public class UndirectedMatrixGraphTests

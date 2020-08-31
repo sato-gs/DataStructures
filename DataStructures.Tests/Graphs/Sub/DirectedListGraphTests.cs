@@ -1,18 +1,18 @@
-﻿namespace DataStructures.Tests.Graphs
+﻿namespace DataStructures.Tests.Graphs.Sub
 {
     using System;
-    using DataStructures.Graphs;
+    using DataStructures.Graphs.Sub;
     using NUnit.Framework;
 
-    public class UndirectedWeightedMatrixGraphTests
+    public class DirectedListGraphTests
     {
-        private UndirectedWeightedMatrixGraph _graph;
+        private DirectedListGraph _graph;
         private const int _numberOfVertices = 5;
 
         [SetUp]
         public void SetUp()
         {
-            _graph = new UndirectedWeightedMatrixGraph(_numberOfVertices);
+            _graph = new DirectedListGraph(_numberOfVertices);
         }
 
         [Test]
@@ -23,34 +23,32 @@
         public void AddEdge_WhenVertexDoesNotExist_ShouldThrowInvalidOperationException(int from, int to)
         {
             // Arrange & Act & Assert
-            Assert.Throws<InvalidOperationException>(() => _graph.AddEdge(from, to, 1));
+            Assert.Throws<InvalidOperationException>(() => _graph.AddEdge(from, to));
         }
 
         [Test]
-        public void AddEdge_WhenEdgeExists_ShouldNotAddUndirectedWeightedEdgeAndReturnFalse()
+        public void AddEdge_WhenEdgeExists_ShouldNotAddDirectedEdgeAndReturnFalse()
         {
             // Arrange
-            _graph.AddEdge(0, 1, 1);
+            _graph.AddEdge(0, 1);
 
             // Act
-            var result = _graph.AddEdge(0, 1, 1);
+            var result = _graph.AddEdge(0, 1);
 
             // Assert
             Assert.That(result, Is.EqualTo(false));
             Assert.That(_graph.EdgeAt(0, 1), Is.EqualTo(true));
-            Assert.That(_graph.EdgeAt(1, 0), Is.EqualTo(true));
         }
 
         [Test]
-        public void AddEdge_WhenEdgeDoesNotExist_ShouldAddUndirectedWeightedEdgeAndReturnTrue()
+        public void AddEdge_WhenEdgeDoesNotExist_ShouldAddDirectedEdgeAndReturnTrue()
         {
             // Arrange & Act
-            var result = _graph.AddEdge(0, 1, 1);
+            var result = _graph.AddEdge(0, 1);
 
             // Assert
             Assert.That(result, Is.EqualTo(true));
             Assert.That(_graph.EdgeAt(0, 1), Is.EqualTo(true));
-            Assert.That(_graph.EdgeAt(1, 0), Is.EqualTo(true));
         }
 
         [Test]
@@ -65,10 +63,10 @@
         }
 
         [Test]
-        public void RemoveEdge_WhenEdgeExists_ShouldRemoveUndirectedWeightedEdgeAndReturnTrue()
+        public void RemoveEdge_WhenEdgeExists_ShouldRemoveDirectedEdgeAndReturnTrue()
         {
             // Arrange
-            _graph.AddEdge(0, 1, 1);
+            _graph.AddEdge(0, 1);
 
             // Act
             var result = _graph.RemoveEdge(0, 1);
@@ -76,11 +74,10 @@
             // Assert
             Assert.That(result, Is.EqualTo(true));
             Assert.That(_graph.EdgeAt(0, 1), Is.EqualTo(false));
-            Assert.That(_graph.EdgeAt(1, 0), Is.EqualTo(false));
         }
 
         [Test]
-        public void RemoveEdge_WhenEdgeDoesNotExist_ShouldNotRemoveUndirectedWeightedEdgeAndReturnFalse()
+        public void RemoveEdge_WhenEdgeDoesNotExist_ShouldNotRemoveDirectedEdgeAndReturnFalse()
         {
             // Arrange & Act
             var result = _graph.RemoveEdge(0, 1);
@@ -88,7 +85,6 @@
             // Assert
             Assert.That(result, Is.EqualTo(false));
             Assert.That(_graph.EdgeAt(0, 1), Is.EqualTo(false));
-            Assert.That(_graph.EdgeAt(1, 0), Is.EqualTo(false));
         }
     }
 }

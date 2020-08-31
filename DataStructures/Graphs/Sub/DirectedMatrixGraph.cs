@@ -1,10 +1,10 @@
-﻿namespace DataStructures.Graphs
+﻿namespace DataStructures.Graphs.Sub
 {
     using System;
     using System.Text;
 
-    // Undirected graph implemented using an adjacency matrix
-    public class UndirectedMatrixGraph
+    // Directed graph implemented using an adjacency matrix
+    public class DirectedMatrixGraph
     {
         // Represent the number of vertices
         private readonly int _numberOfVertices;
@@ -15,7 +15,7 @@
         // Represent the number indicating that an edge exists (e.g. 1)
         private const int EDGE_EXIST = 1;
 
-        public UndirectedMatrixGraph(int numberOfVertices)
+        public DirectedMatrixGraph(int numberOfVertices)
         {
             _numberOfVertices = numberOfVertices;
             _matrix = new int[numberOfVertices, numberOfVertices];
@@ -28,7 +28,7 @@
             }
         }
 
-        // Add an undirected edge from a given vertex to a given vertex
+        // Add a directed edge from a given vertex to a given vertex
         public bool AddEdge(int from, int to)
         {
             if (from < 0
@@ -42,13 +42,13 @@
             var notExist = _matrix[from, to] == EDGE_NOT_EXIST;
             if (notExist)
             {
-                _matrix[from, to] = _matrix[to, from] = EDGE_EXIST;
+                _matrix[from, to] = EDGE_EXIST;
             }
 
             return notExist;
         }
 
-        // Remove an undirected edge from a given vertex to a given vertex
+        // Remove a directed edge from a given vertex to a given vertex
         public bool RemoveEdge(int from, int to)
         {
             if (from < 0
@@ -62,13 +62,13 @@
             var exist = _matrix[from, to] == EDGE_EXIST;
             if (exist)
             {
-                _matrix[from, to] = _matrix[to, from] = EDGE_NOT_EXIST;
+                _matrix[from, to] = EDGE_NOT_EXIST;
             }
 
             return exist;
         }
 
-        // Check whether an undirected edge exists from a given vertex to a given vertex (as a test helper function)
+        // Check whether a directed edge exists from a given vertex to a given vertex (as a test helper function)
         public bool EdgeAt(int from, int to)
         {
             return _matrix[from, to] == EDGE_EXIST;

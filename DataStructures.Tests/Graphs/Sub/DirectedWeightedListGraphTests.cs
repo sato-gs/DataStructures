@@ -1,18 +1,18 @@
-﻿namespace DataStructures.Tests.Graphs
+﻿namespace DataStructures.Tests.Graphs.Sub
 {
     using System;
-    using DataStructures.Graphs;
+    using DataStructures.Graphs.Sub;
     using NUnit.Framework;
 
-    public class DirectedWeightedMatrixGraphTests
+    public class DirectedWeightedListGraphTests
     {
-        private DirectedWeightedMatrixGraph _graph;
+        private DirectedWeightedListGraph _graph;
         private const int _numberOfVertices = 5;
 
         [SetUp]
         public void SetUp()
         {
-            _graph = new DirectedWeightedMatrixGraph(_numberOfVertices);
+            _graph = new DirectedWeightedListGraph(_numberOfVertices);
         }
 
         [Test]

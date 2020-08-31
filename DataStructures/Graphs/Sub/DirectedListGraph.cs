@@ -1,4 +1,4 @@
-﻿namespace DataStructures.Graphs
+﻿namespace DataStructures.Graphs.Sub
 {
     using System;
     using System.Collections.Generic;
