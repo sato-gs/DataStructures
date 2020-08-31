@@ -1,14 +1,16 @@
-﻿namespace DataStructures.Stacks
+﻿namespace DataStructures.Stacks.Sub
 {
     using System;
 
-    // Stack implemented using static Array (e.g. Array without resize feature)
-    public class StackWithStaticArray<T>
+    // Stack implemented using dynamic Array (e.g. Array with resize feature)
+    public class StackWithDynamicArray<T>
     {
         // Represent the stack
-        private readonly T[] _stack;
+        private T[] _stack;
         // Represent the current size of the stack
         private int _size;
+        // Represent the default capacity of the stack
+        private readonly int _defaultCapacity = 5;
 
         // Represent whether the stack is empty or not
         public bool IsEmpty
@@ -37,7 +39,13 @@
             }
         }
 
-        public StackWithStaticArray(int capacity)
+        public StackWithDynamicArray()
+        {
+            _stack = new T[_defaultCapacity];
+            _size = 0;
+        }
+
+        public StackWithDynamicArray(int capacity)
         {
             _stack = new T[capacity];
             _size = 0;
@@ -79,10 +87,18 @@
         {
             if (IsFull)
             {
-                throw new InvalidOperationException("The stack is full.");
+                Resize(Math.Max(_defaultCapacity, _stack.Length * 2));
             }
 
             _stack[_size++] = value;
+        }
+
+        // Resize the stack
+        private void Resize(int size)
+        {
+            var array = new T[size];
+            Array.Copy(_stack, 0, array, 0, _size);
+            _stack = array;
         }
     }
 }

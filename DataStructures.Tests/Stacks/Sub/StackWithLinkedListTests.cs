@@ -1,18 +1,17 @@
-﻿namespace DataStructures.Tests.Stacks
+﻿namespace DataStructures.Tests.Stacks.Sub
 {
     using System;
-    using DataStructures.Stacks;
+    using DataStructures.Stacks.Sub;
     using NUnit.Framework;
 
-    public class StackWithDynamicArrayTests
+    public class StackWithLinkedListTests
     {
-        private StackWithDynamicArray<int> _stack;
-        private readonly int _capacity = 5;
+        private StackWithLinkedList<int> _stack;
 
         [SetUp]
         public void SetUp()
         {
-            _stack = new StackWithDynamicArray<int>(_capacity);
+            _stack = new StackWithLinkedList<int>();
         }
 
         [Test]
@@ -33,29 +32,6 @@
 
             // Assert
             Assert.That(result, Is.EqualTo(false));
-        }
-
-        [Test]
-        public void IsFull_WhenStackIsFull_ShouldReturnTrue()
-        {
-            // Arrange
-            for (var i = 1; i <= _capacity; i++)
-            {
-                _stack.Push(i);
-            }
-
-            // Act
-            var result = _stack.IsFull;
-
-            // Assert
-            Assert.That(result, Is.EqualTo(true));
-        }
-
-        [Test]
-        public void IsFull_WhenStackIsNotFull_ShouldReturnFalse()
-        {
-            // Arrange & Act & Assert
-            Assert.That(_stack.IsFull, Is.EqualTo(false));
         }
 
         [Test]
@@ -162,21 +138,14 @@
         }
 
         [Test]
-        [TestCase(0, 1)]
-        [TestCase(0, 10)]
-        [TestCase(0, 100)]
-        [TestCase(50, 1)]
-        [TestCase(50, 10)]
-        [TestCase(50, 100)]
-        [TestCase(100, 1)]
-        [TestCase(100, 10)]
-        [TestCase(100, 100)]
-        public void Push_WhenCalled_ShouldAddItemToTopOfStack(int capacity, int range)
+        [TestCase(1)]
+        [TestCase(2)]
+        [TestCase(3)]
+        [TestCase(4)]
+        [TestCase(5)]
+        public void Push_WhenStackIsNotFull_ShouldAddItemToTopOfStack(int range)
         {
-            // Arrange
-            _stack = new StackWithDynamicArray<int>(capacity);
-
-            // Act
+            // Arrange & Act
             for (var i = 1; i <= range; i++)
             {
                 _stack.Push(i);

@@ -1,12 +1,12 @@
-﻿namespace DataStructures.Stacks
+﻿namespace DataStructures.Stacks.Sub
 {
     using System;
 
-    // Stack implemented using linked list
-    public class StackWithLinkedList<T>
+    // Stack implemented using static Array (e.g. Array without resize feature)
+    public class StackWithStaticArray<T>
     {
-        // Represent the top of the stack
-        private Node<T> _top;
+        // Represent the stack
+        private readonly T[] _stack;
         // Represent the current size of the stack
         private int _size;
 
@@ -19,6 +19,15 @@
             }
         }
 
+        // Represent whether the stack is full or not
+        public bool IsFull
+        {
+            get
+            {
+                return _size == _stack.Length;
+            }
+        }
+
         // Represent the number of items stored in the stack
         public int Count
         {
@@ -28,18 +37,16 @@
             }
         }
 
-        // Clear the stack (and free memory) by letting GC take charge
+        public StackWithStaticArray(int capacity)
+        {
+            _stack = new T[capacity];
+            _size = 0;
+        }
+
+        // Clear the stack (and free memory) by setting each item to default
         public void Clear()
         {
-            var cur = _top;
-            while (cur != null)
-            {
-                var next = cur.Next;
-                cur = null;
-                cur = next;
-            }
-
-            _top = null;
+            Array.Clear(_stack, 0, _size);
             _size = 0;
         }
 
@@ -51,7 +58,7 @@
                 throw new InvalidOperationException("The stack is empty.");
             }
 
-            return _top.Value;
+            return _stack[_size - 1];
         }
 
         // Remove an item (and free memory) from the top of the stack
@@ -62,32 +69,20 @@
                 throw new InvalidOperationException("The stack is empty.");
             }
 
-            var item = _top;
-            _top = item.Next;
-            _size--;
-            return item.Value;
+            var value = _stack[--_size];
+            _stack[_size] = default;
+            return value;
         }
 
         // Add an item to the top of the stack
         public void Push(T value)
         {
-            var node = new Node<T>(value, _top);
-            _size++;
-            _top = node;
-        }
-
-        public class Node<NodeT>
-        {
-            public Node(
-                NodeT value,
-                Node<NodeT> next = null)
+            if (IsFull)
             {
-                Value = value;
-                Next = next;
+                throw new InvalidOperationException("The stack is full.");
             }
 
-            public NodeT Value { get; set; }
-            public Node<NodeT> Next { get; set; }
+            _stack[_size++] = value;
         }
     }
 }

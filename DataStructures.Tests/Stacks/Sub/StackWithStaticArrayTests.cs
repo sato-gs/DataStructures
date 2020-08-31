@@ -1,7 +1,7 @@
-﻿namespace DataStructures.Tests.Stacks
+﻿namespace DataStructures.Tests.Stacks.Sub
 {
     using System;
-    using DataStructures.Stacks;
+    using DataStructures.Stacks.Sub;
     using NUnit.Framework;
 
     public class StackWithStaticArrayTests
