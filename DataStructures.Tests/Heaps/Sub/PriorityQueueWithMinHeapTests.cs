@@ -1,9 +1,9 @@
-﻿namespace DataStructures.Tests.Heaps
+﻿namespace DataStructures.Tests.Heaps.Sub
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using DataStructures.Heaps;
+    using DataStructures.Heaps.Sub;
     using NUnit.Framework;
 
     public class PriorityQueueWithMinHeapTests

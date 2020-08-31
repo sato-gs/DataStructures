@@ -1,20 +1,20 @@
-﻿namespace DataStructures.Tests.Heaps
+﻿namespace DataStructures.Tests.Heaps.Sub
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using DataStructures.Heaps;
+    using DataStructures.Heaps.Sub;
     using NUnit.Framework;
 
-    public class MinHeapWithDynamicArrayTests
+    public class MinHeapWithStaticArrayTests
     {
-        private MinHeapWithDynamicArray<int> _heap;
+        private MinHeapWithStaticArray<int> _heap;
         private readonly int _capacity = 10;
         private readonly int[] _values = new int[] { 5, 3, 7, 2, 4, 6, 9, 1, 8, 10 };
 
         private readonly Dictionary<int, int[]> _answersForInsertion = new Dictionary<int, int[]>()
         {
-
+            
             { 1, new int[] { 5 } },
             /* (1)
 			            5
@@ -174,7 +174,7 @@
         [SetUp]
         public void SetUp()
         {
-            _heap = new MinHeapWithDynamicArray<int>(_capacity);
+            _heap = new MinHeapWithStaticArray<int>(_capacity);
         }
 
         [Test]
@@ -243,7 +243,20 @@
         }
 
         [Test]
-        public void Insert_WhenCalled_ShouldInsertItemWithMinHeapPropertyMaintained()
+        public void Insert_WhenHeapIsFull_ShouldThrowInvalidOperationException()
+        {
+            // Arrange
+            for (var i = 1; i <= _capacity; i++)
+            {
+                _heap.Insert(i);
+            }
+
+            // Act & Assert
+            Assert.Throws<InvalidOperationException>(() => _heap.Insert(100));
+        }
+
+        [Test]
+        public void Insert_WhenHeapIsNotFull_ShouldInsertItemWithMinHeapPropertyMaintained()
         {
             // Arrange & Act & Assert
             for (var i = 0; i < _values.Length; i++)

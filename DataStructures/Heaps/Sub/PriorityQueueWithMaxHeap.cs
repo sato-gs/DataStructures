@@ -1,9 +1,9 @@
-﻿namespace DataStructures.Heaps
+﻿namespace DataStructures.Heaps.Sub
 {
     using System;
 
-    // Priority queue implemented using min heap (e.g. the smaller the priority is, the higher the priority is)
-    public class PriorityQueueWithMinHeap<T>
+    // Priority queue implemented using max heap (e.g. the larger the priority is, the higher the priority is)
+    public class PriorityQueueWithMaxHeap<T>
     {
         // Represent the priority queue
         private Node<T>[] _queue;
@@ -39,13 +39,13 @@
             }
         }
 
-        public PriorityQueueWithMinHeap()
+        public PriorityQueueWithMaxHeap()
         {
             _queue = new Node<T>[_defaultCapacity];
             _size = 0;
         }
 
-        public PriorityQueueWithMinHeap(int capacity)
+        public PriorityQueueWithMaxHeap(int capacity)
         {
             _queue = new Node<T>[capacity];
             _size = 0;
@@ -135,11 +135,11 @@
                 return;
             }
 
-            // If a current child is equal to or greater than its parent in terms of priority
+            // If a current child is equal to or smaller than its parent in terms of priority
             // Break out of the recursion
             var cur = _queue[index];
             var parentIndex = GetParentIndex(index);
-            if (cur.Priority >= _queue[parentIndex].Priority)
+            if (cur.Priority <= _queue[parentIndex].Priority)
             {
                 return;
             }
@@ -159,23 +159,23 @@
                 return;
             }
 
-            var smallerChildIndex = GetLeftChildIndex(index);
+            var largerChildIndex = GetLeftChildIndex(index);
             if (HasRightChild(index)
-                && GetLeftChild(index).Priority > GetRightChild(index).Priority)
+                && GetLeftChild(index).Priority < GetRightChild(index).Priority)
             {
-                smallerChildIndex = GetRightChildIndex(index);
+                largerChildIndex = GetRightChildIndex(index);
             }
 
-            // If a current parent is equal to or smaller than its smaller child in terms of priority
+            // If a current parent is equal to or larger than its larger child in terms of priority
             // Break out of the recursion
-            if (_queue[index].Priority <= _queue[smallerChildIndex].Priority)
+            if (_queue[index].Priority >= _queue[largerChildIndex].Priority)
             {
                 return;
             }
 
             // Otherwise, swap them and continue recursively
-            Swap(index, smallerChildIndex);
-            RestructureDown(smallerChildIndex);
+            Swap(index, largerChildIndex);
+            RestructureDown(largerChildIndex);
         }
 
         // Swap two items

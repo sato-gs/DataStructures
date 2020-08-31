@@ -1,14 +1,14 @@
-﻿namespace DataStructures.Tests.Heaps
+﻿namespace DataStructures.Tests.Heaps.Sub
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using DataStructures.Heaps;
+    using DataStructures.Heaps.Sub;
     using NUnit.Framework;
 
-    public class MaxHeapWithStaticArrayTests
+    public class PriorityQueueWithMaxHeapTests
     {
-        private MaxHeapWithStaticArray<int> _heap;
+        private PriorityQueueWithMaxHeap<string> _queue;
         private readonly int _capacity = 10;
         private readonly int[] _values = new int[] { 5, 3, 7, 2, 4, 6, 9, 1, 8, 10 };
 
@@ -174,50 +174,50 @@
         [SetUp]
         public void SetUp()
         {
-            _heap = new MaxHeapWithStaticArray<int>(_capacity);
+            _queue = new PriorityQueueWithMaxHeap<string>(_capacity);
         }
 
         [Test]
-        public void IsEmpty_WhenHeapIsEmpty_ShouldReturnTrue()
+        public void IsEmpty_WhenPriorityQueueIsEmpty_ShouldReturnTrue()
         {
             // Arrange & Act & Assert
-            Assert.That(_heap.IsEmpty, Is.EqualTo(true));
+            Assert.That(_queue.IsEmpty, Is.EqualTo(true));
         }
 
         [Test]
-        public void IsEmpty_WhenHeapIsNotEmpty_ShouldReturnFalse()
+        public void IsEmpty_WhenPriorityQueueIsNotEmpty_ShouldReturnFalse()
         {
             // Arrange
-            _heap.Insert(1);
+            _queue.Enqueue(1, "Item 1");
 
             // Act
-            var result = _heap.IsEmpty;
+            var result = _queue.IsEmpty;
 
             // Assert
             Assert.That(result, Is.EqualTo(false));
         }
 
         [Test]
-        public void IsFull_WhenHeapIsFull_ShouldReturnTrue()
+        public void IsFull_WhenPriorityQueueIsFull_ShouldReturnTrue()
         {
             // Arrange
             for (var i = 1; i <= _capacity; i++)
             {
-                _heap.Insert(i);
+                _queue.Enqueue(i, $"Item {i}");
             }
 
             // Act
-            var result = _heap.IsFull;
+            var result = _queue.IsFull;
 
             // Assert
             Assert.That(result, Is.EqualTo(true));
         }
 
         [Test]
-        public void IsFull_WhenHeapIsNotFull_ShouldReturnFalse()
+        public void IsFull_WhenPriorityQueueIsNotFull_ShouldReturnFalse()
         {
             // Arrange & Act & Assert
-            Assert.That(_heap.IsFull, Is.EqualTo(false));
+            Assert.That(_queue.IsFull, Is.EqualTo(false));
         }
 
         [Test]
@@ -232,91 +232,98 @@
             // Arrange
             for (var i = 1; i <= range; i++)
             {
-                _heap.Insert(i);
+                _queue.Enqueue(i, $"Item {i}");
             }
 
             // Act
-            var result = _heap.Count;
+            var result = _queue.Count;
 
             // Assert
             Assert.That(result, Is.EqualTo(range));
         }
 
         [Test]
-        public void Insert_WhenHeapIsFull_ShouldThrowInvalidOperationException()
-        {
-            // Arrange
-            for (var i = 1; i <= _capacity; i++)
-            {
-                _heap.Insert(i);
-            }
-
-            // Act & Assert
-            Assert.Throws<InvalidOperationException>(() => _heap.Insert(100));
-        }
-
-        [Test]
-        public void Insert_WhenHeapIsNotFull_ShouldInsertItemWithMaxHeapPropertyMaintained()
+        public void Enqueue_WhenCalled_ShouldAddItemWithPriorityPropertyMaintained()
         {
             // Arrange & Act & Assert
             for (var i = 0; i < _values.Length; i++)
             {
-                _heap.Insert(_values[i]);
+                _queue.Enqueue(_values[i], $"Item {_values[i]}");
                 var answer = _answersForInsertion[i + 1];
-                Assert.That(_heap.PeekMax(), Is.EqualTo(answer.Max()));
-                Assert.That(_heap.Count, Is.EqualTo(i + 1));
+                Assert.That(
+                    _queue.PeekPriority(),
+                    Is.Not.Null
+                    .And.Property(nameof(PriorityQueueWithMaxHeap<string>.Node<string>.Priority)).EqualTo(answer.Max())
+                    .And.Property(nameof(PriorityQueueWithMaxHeap<string>.Node<string>.Value)).EqualTo($"Item {answer.Max()}"));
+                Assert.That(_queue.Count, Is.EqualTo(i + 1));
                 for (var j = 0; j < answer.Length; j++)
                 {
-                    Assert.That(_heap.GetAt(j), Is.EqualTo(answer[j]));
+                    Assert.That(
+                        _queue.GetAt(j),
+                        Is.Not.Null
+                        .And.Property(nameof(PriorityQueueWithMaxHeap<string>.Node<string>.Priority)).EqualTo(answer[j])
+                        .And.Property(nameof(PriorityQueueWithMaxHeap<string>.Node<string>.Value)).EqualTo($"Item {answer[j]}"));
                 }
             }
         }
 
         [Test]
-        public void PeekMax_WhenHeapIsEmpty_ShouldThrowInvalidOperationException()
+        public void PeekPriority_WhenPriorityQueueIsEmpty_ShouldThrowInvalidOperationException()
         {
             // Arrange & Act & Assert
-            Assert.Throws<InvalidOperationException>(() => _heap.PeekMax());
+            Assert.Throws<InvalidOperationException>(() => _queue.PeekPriority());
         }
 
         [Test]
-        public void PeekMax_WhenHeapIsNotEmpty_ShouldReturnMaximumItem()
+        public void PeekPriority_WhenPriorityQueueIsNotEmpty_ShouldReturnHighestPriorityItem()
         {
             // Arrange & Act & Assert
             for (var i = 0; i < _values.Length; i++)
             {
-                _heap.Insert(_values[i]);
+                _queue.Enqueue(_values[i], $"Item {_values[i]}");
                 var answer = _answersForInsertion[i + 1];
-                Assert.That(_heap.PeekMax(), Is.EqualTo(answer.Max()));
-                Assert.That(_heap.Count, Is.EqualTo(i + 1));
+                Assert.That(
+                    _queue.PeekPriority(),
+                    Is.Not.Null
+                    .And.Property(nameof(PriorityQueueWithMaxHeap<string>.Node<string>.Priority)).EqualTo(answer.Max())
+                    .And.Property(nameof(PriorityQueueWithMaxHeap<string>.Node<string>.Value)).EqualTo($"Item {answer.Max()}"));
+                Assert.That(_queue.Count, Is.EqualTo(i + 1));
             }
         }
 
         [Test]
-        public void PopMax_WhenHeapIsEmpty_ShouldThrowInvalidOperationException()
+        public void Dequeue_WhenPriorityQueueIsEmpty_ShouldThrowInvalidOperationException()
         {
             // Arrange & Act & Assert
-            Assert.Throws<InvalidOperationException>(() => _heap.PopMax());
+            Assert.Throws<InvalidOperationException>(() => _queue.Dequeue());
         }
 
         [Test]
-        public void PopMax_WhenHeapIsNotEmpty_ShouldRemoveMaximumItemWithMaxHeapPropertyMaintained()
+        public void Dequeue_WhenPriorityQueueIsNotEmpty_ShouldRemoveHighestPriorityItemWithPriorityPropertyMaintained()
         {
             // Arrange
             for (var i = 0; i < _values.Length; i++)
             {
-                _heap.Insert(_values[i]);
+                _queue.Enqueue(_values[i], $"Item {_values[i]}");
             }
 
             // Act & Assert
             for (var i = 0; i < _values.Length; i++)
             {
                 var answer = _answersForDeletion[i + 1];
-                Assert.That(_heap.PopMax(), Is.EqualTo(_values.Length - i));
-                Assert.That(_heap.Count, Is.EqualTo(_values.Length - i - 1));
+                Assert.That(
+                    _queue.Dequeue(),
+                    Is.Not.Null
+                    .And.Property(nameof(PriorityQueueWithMaxHeap<string>.Node<string>.Priority)).EqualTo(_values.Length - i)
+                    .And.Property(nameof(PriorityQueueWithMaxHeap<string>.Node<string>.Value)).EqualTo($"Item {_values.Length - i}"));
+                Assert.That(_queue.Count, Is.EqualTo(_values.Length - i - 1));
                 for (var j = 0; j < answer.Length; j++)
                 {
-                    Assert.That(_heap.GetAt(j), Is.EqualTo(answer[j]));
+                    Assert.That(
+                        _queue.GetAt(j),
+                        Is.Not.Null
+                        .And.Property(nameof(PriorityQueueWithMaxHeap<string>.Node<string>.Priority)).EqualTo(answer[j])
+                        .And.Property(nameof(PriorityQueueWithMaxHeap<string>.Node<string>.Value)).EqualTo($"Item {answer[j]}"));
                 }
             }
         }

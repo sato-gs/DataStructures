@@ -1,17 +1,15 @@
-﻿namespace DataStructures.Heaps
+﻿namespace DataStructures.Heaps.Sub
 {
     using System;
     using System.Collections.Generic;
 
-    // Max heap implemented using dynamic Array (e.g. Array with resize feature)
-    public class MaxHeapWithDynamicArray<T>
+    // Min heap implemented using static Array (e.g. Array without resize feature)
+    public class MinHeapWithStaticArray<T>
     {
         // Represent the heap
-        private T[] _heap;
+        private readonly T[] _heap;
         // Represent the current size of the heap
         private int _size;
-        // Represent the default capacity of the heap
-        private readonly int _defaultCapacity = 5;
 
         // Represent whether the heap is empty or not
         public bool IsEmpty
@@ -40,35 +38,29 @@
             }
         }
 
-        public MaxHeapWithDynamicArray()
-        {
-            _heap = new T[_defaultCapacity];
-            _size = 0;
-        }
-
-        public MaxHeapWithDynamicArray(int capacity)
+        public MinHeapWithStaticArray(int capacity)
         {
             _heap = new T[capacity];
             _size = 0;
         }
 
-        // Insert an item while maintaining the max heap property
+        // Insert an item while maintaining the min heap property
         public void Insert(T value)
         {
             if (IsFull)
             {
-                Resize(Math.Max(_defaultCapacity, _heap.Length * 2));
+                throw new InvalidOperationException("The heap is full.");
             }
 
             // Add an item to the end of the heap
             _heap[_size] = value;
             _size++;
-            // Restructure the heap to maintain the max heap property
+            // Restructure the heap to maintain the min heap property
             HeapifyUp(_size - 1);
         }
 
-        // Return a maximum item
-        public T PeekMax()
+        // Return a minimum item
+        public T PeekMin()
         {
             if (IsEmpty)
             {
@@ -78,23 +70,23 @@
             return _heap[0];
         }
 
-        // Remove a maximum item while maintaining the max heap property
-        public T PopMax()
+        // Remove a minimum item while maintaining the min heap property
+        public T PopMin()
         {
             if (IsEmpty)
             {
                 throw new InvalidOperationException("The heap is empty.");
             }
 
-            // Remove a maximum item from the top of the heap and replace it with the last item
-            var max = _heap[0];
+            // Remove a minimum item from the top of the heap and replace it with the last item
+            var min = _heap[0];
             _heap[0] = _heap[_size - 1];
             _heap[_size - 1] = default;
             _size--;
-            // Restructure the heap to maintain the max heap property
+            // Restructure the heap to maintain the min heap property
             HeapifyDown(0);
 
-            return max;
+            return min;
         }
 
         // Return an item stored at a given index (as a test helper function)
@@ -124,7 +116,7 @@
         // Check whether an item stored at a given index has a right child or not
         private bool HasRightChild(int index) => GetRightChildIndex(index) < _size;
 
-        // Restructure the heap bottom-up in such ways that the max heap property is maintained
+        // Restructure the heap bottom-up in such ways that the min heap property is maintained
         private void HeapifyUp(int index)
         {
             // If it is a root item
@@ -137,12 +129,12 @@
             var cur = _heap[index];
             var parentIndex = GetParentIndex(index);
 
-            // If a current child is equal to or smaller than its parent
+            // If a current child is equal to or larger than its parent
             // Break out of the recursion
             var cmp = Comparer<T>
                 .Default
                 .Compare(cur, _heap[parentIndex]);
-            if (cmp <= 0)
+            if (cmp >= 0)
             {
                 return;
             }
@@ -152,7 +144,7 @@
             HeapifyUp(parentIndex);
         }
 
-        // Restructure the heap top-down in such ways that the max heap property is maintained
+        // Restructure the heap top-down in such ways that the min heap property is maintained
         private void HeapifyDown(int index)
         {
             // If there is no left child (meaning no child)
@@ -162,26 +154,26 @@
                 return;
             }
 
-            var largerChildIndex = GetLeftChildIndex(index);
+            var smallerChildIndex = GetLeftChildIndex(index);
             if (HasRightChild(index)
-                && Comparer<T>.Default.Compare(GetLeftChild(index), GetRightChild(index)) < 0)
+                && Comparer<T>.Default.Compare(GetLeftChild(index), GetRightChild(index)) > 0)
             {
-                largerChildIndex = GetRightChildIndex(index);
+                smallerChildIndex = GetRightChildIndex(index);
             }
 
-            // If a current parent is equal to or larger than its larger child
+            // If a current parent is equal to or smaller than its smaller child
             // Break out of the recursion
             var cmp = Comparer<T>
                 .Default
-                .Compare(_heap[index], _heap[largerChildIndex]);
-            if (cmp >= 0)
+                .Compare(_heap[index], _heap[smallerChildIndex]);
+            if (cmp <= 0)
             {
                 return;
             }
 
             // Otherwise, swap them and continue recursively
-            Swap(index, largerChildIndex);
-            HeapifyDown(largerChildIndex);
+            Swap(index, smallerChildIndex);
+            HeapifyDown(smallerChildIndex);
         }
 
         // Swap two items
@@ -190,14 +182,6 @@
             var temp = _heap[index1];
             _heap[index1] = _heap[index2];
             _heap[index2] = temp;
-        }
-
-        // Resize the heap
-        private void Resize(int size)
-        {
-            var array = new T[size];
-            Array.Copy(_heap, 0, array, 0, _size);
-            _heap = array;
         }
     }
 }
