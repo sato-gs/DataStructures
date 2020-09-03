@@ -120,7 +120,8 @@
             var visited = new Dictionary<T, bool>();
             // Create a queue
             var queue = new Queue<T>();
-            // Add the start vertex to the queue
+            // Mark the start vertex as visited and add it to the queue
+            visited[start] = true;
             queue.Enqueue(start);
 
             // Continue until the queue is empty
@@ -128,15 +129,13 @@
             {
                 // Remove a vertex at the beginning of the queue
                 var cur = queue.Dequeue();
-                // Mark it as visited
-                visited[cur] = true;
-
-                // Add unvisited adjacent vertices to the back of the queue
+                // Mark unvisited adjacent vertices as visited and add them to the back of the queue
                 foreach (var edge in _vertices[cur].Edges)
                 {
                     var value = edge.Vertex.Value;
                     if (!visited.GetValueOrDefault(value))
                     {
+                        visited[value] = true;
                         queue.Enqueue(value);
                     }
                 }
@@ -167,10 +166,15 @@
             {
                 // Remove a vertex at the top of the stack
                 var cur = stack.Pop();
-                // Mark it as visited
+                // If the current vertex is visited
+                // Skip it
+                if (visited.GetValueOrDefault(cur))
+                {
+                    continue;
+                }
+                // If the current vertex is unvisited
+                // Mark it as visited and add unvisited adjacent vertices to the top of the stack
                 visited[cur] = true;
-
-                // Add unvisited adjacent vertices to the top of the stack
                 foreach (var edge in _vertices[cur].Edges)
                 {
                     var value = edge.Vertex.Value;
@@ -199,9 +203,15 @@
             // Create a recursive function
             void Traverse(Dictionary<T, bool> visited, T value)
             {
-                // Mark it as visited
+                // If the current vertex is visited
+                // Skip it
+                if (visited.GetValueOrDefault(value))
+                {
+                    return;
+                }
+                // If the current vertex is unvisited
+                // Mark it as visited and recursively traverse unvisited adjacent vertices
                 visited[value] = true;
-                // Recursively traverse unvisited adjacent vertices (depth-first)
                 foreach (var edge in _vertices[value].Edges)
                 {
                     var val = edge.Vertex.Value;
