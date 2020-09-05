@@ -54,7 +54,7 @@
             Assert.That(
                 result,
                 Is.Not.Null
-                .And.Property(nameof(BinarySearchTreeWithDuplicate<int>.Node<int>.Value))
+                .And.Property(nameof(BinarySearchTree<int>.Node.Value))
                 .EqualTo(value));
         }
 
@@ -81,7 +81,7 @@
             Assert.That(
                 result,
                 Is.Not.Null
-                .And.Property(nameof(BinarySearchTreeWithDuplicate<int>.Node<int>.Value))
+                .And.Property(nameof(BinarySearchTree<int>.Node.Value))
                 .EqualTo(1));
         }
 
@@ -108,7 +108,7 @@
             Assert.That(
                 result,
                 Is.Not.Null
-                .And.Property(nameof(BinarySearchTreeWithDuplicate<int>.Node<int>.Value))
+                .And.Property(nameof(BinarySearchTree<int>.Node.Value))
                 .EqualTo(10));
         }
 
@@ -125,7 +125,7 @@
                 Assert.That(
                     result,
                     Is.Not.Null
-                    .And.Property(nameof(BinarySearchTreeWithDuplicate<int>.Node<int>.Value))
+                    .And.Property(nameof(BinarySearchTree<int>.Node.Value))
                     .EqualTo(val));
             });
         }
@@ -149,7 +149,7 @@
                 Assert.That(
                     result,
                     Is.Not.Null
-                    .And.Property(nameof(BinarySearchTreeWithDuplicate<int>.Node<int>.Value))
+                    .And.Property(nameof(BinarySearchTree<int>.Node.Value))
                     .EqualTo(val));
             });
         }
@@ -173,7 +173,7 @@
                 Assert.That(
                     result,
                     Is.Not.Null
-                    .And.Property(nameof(BinarySearchTreeWithDuplicate<int>.Node<int>.Value))
+                    .And.Property(nameof(BinarySearchTree<int>.Node.Value))
                     .EqualTo(val));
             });
         }
@@ -205,7 +205,7 @@
                     Assert.That(
                         result,
                         Is.Not.Null
-                        .And.Property(nameof(BinarySearchTreeWithDuplicate<int>.Node<int>.Value))
+                        .And.Property(nameof(BinarySearchTree<int>.Node.Value))
                         .EqualTo(val));
                 }
             });
@@ -216,7 +216,7 @@
         }
 
         [Test]
-        public void LevelOrderTraverse_WhenCalled_ShouldTraverseViaLevelOrderTraversal()
+        public void LevelOrderTraverse_WhenCalled_ShouldTraverseViaLevelOrderTraversalNonRecursively()
         {
             // Arrange
             var expected = new int[] { 5, 3, 7, 2, 4, 6, 9, 1, 8, 10 };
@@ -233,7 +233,7 @@
         }
 
         [Test]
-        public void PreOrderTraverse_WhenCalled_ShouldTraverseViaPreOrderTraversal()
+        public void PreOrderTraverse_WhenCalled_ShouldTraverseViaPreOrderTraversalNonRecursively()
         {
             // Arrange
             var expected = new int[] { 5, 3, 2, 1, 4, 7, 6, 9, 8, 10 };
@@ -250,7 +250,24 @@
         }
 
         [Test]
-        public void PostOrderTraverse_WhenCalled_ShouldTraverseViaPostOrderTraversal()
+        public void PreOrderTraverseRecursive_WhenCalled_ShouldTraverseViaPreOrderTraversalRecursively()
+        {
+            // Arrange
+            var expected = new int[] { 5, 3, 2, 1, 4, 7, 6, 9, 8, 10 };
+            _values.ForEach(val => _tree.Insert(val));
+
+            // Act
+            var result = _tree.PreOrderTraverseRecursive();
+
+            // Assert
+            foreach (var (val, index) in result.Select((val, index) => (val, index)))
+            {
+                Assert.That(expected[index], Is.EqualTo(val));
+            }
+        }
+
+        [Test]
+        public void PostOrderTraverse_WhenCalled_ShouldTraverseViaPostOrderTraversalNonRecursively()
         {
             // Arrange
             var expected = new int[] { 1, 2, 4, 3, 6, 8, 10, 9, 7, 5 };
@@ -267,7 +284,24 @@
         }
 
         [Test]
-        public void InOrderTraverse_WhenCalled_ShouldTraverseViaInOrderTraversal()
+        public void PostOrderTraverseRecursive_WhenCalled_ShouldTraverseViaPostOrderTraversalRecursively()
+        {
+            // Arrange
+            var expected = new int[] { 1, 2, 4, 3, 6, 8, 10, 9, 7, 5 };
+            _values.ForEach(val => _tree.Insert(val));
+
+            // Act
+            var result = _tree.PostOrderTraverseRecursive();
+
+            // Assert
+            foreach (var (val, index) in result.Select((val, index) => (val, index)))
+            {
+                Assert.That(expected[index], Is.EqualTo(val));
+            }
+        }
+
+        [Test]
+        public void InOrderTraverse_WhenCalled_ShouldTraverseViaInOrderTraversalNonRecursively()
         {
             // Arrange
             var expected = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
@@ -275,6 +309,23 @@
 
             // Act
             var result = _tree.InOrderTraverse();
+
+            // Assert
+            foreach (var (val, index) in result.Select((val, index) => (val, index)))
+            {
+                Assert.That(expected[index], Is.EqualTo(val));
+            }
+        }
+
+        [Test]
+        public void InOrderTraverseRecursive_WhenCalled_ShouldTraverseViaInOrderTraversalRecursively()
+        {
+            // Arrange
+            var expected = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+            _values.ForEach(val => _tree.Insert(val));
+
+            // Act
+            var result = _tree.InOrderTraverseRecursive();
 
             // Assert
             foreach (var (val, index) in result.Select((val, index) => (val, index)))

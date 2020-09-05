@@ -1,22 +1,22 @@
 ﻿namespace DataStructures.BinaryTrees.Sub
 {
     using System.Collections.Generic;
-    using System.Diagnostics;
+    using System.Linq;
 
     // Binary search tree with duplicate allowed
     public class BinarySearchTreeWithDuplicate<T>
     {
         // Represent the root node
-        public Node<T> Root { get; private set; }
+        public Node Root { get; private set; }
 
         // Find a node with a given value
-        public Node<T> Find(T value)
+        public Node Find(T value)
         {
-            return Find(Root, value);
+            return FindRecursive(Root, value);
         }
 
         // Find a node with a given value recursively
-        private Node<T> Find(Node<T> node, T value)
+        private Node FindRecursive(Node node, T value)
         {
             if (node == null)
             {
@@ -30,13 +30,13 @@
             // Continue with its left sub-tree
             if (cmp < 0)
             {
-                return Find(node.Left, value);
+                return FindRecursive(node.Left, value);
             }
             // If a value is greater than the value of the current node
             // Continue with its right sub-tree
             else if (cmp > 0)
             {
-                return Find(node.Right, value);
+                return FindRecursive(node.Right, value);
             }
             // If a value is equal to the value of the current node
             // Return it
@@ -47,13 +47,13 @@
         }
 
         // Find a node with a minimum value
-        public Node<T> FindMin()
+        public Node FindMin()
         {
-            return FindMin(Root);
+            return FindMinRecursive(Root);
         }
 
         // Find a node with a minimum value recursively
-        private Node<T> FindMin(Node<T> node)
+        private Node FindMinRecursive(Node node)
         {
             if (node?.Left == null)
             {
@@ -61,18 +61,18 @@
             }
             else
             {
-                return FindMin(node.Left);
+                return FindMinRecursive(node.Left);
             }
         }
 
         // Find a node with a maximum value
-        public Node<T> FindMax()
+        public Node FindMax()
         {
-            return FindMax(Root);
+            return FindMaxRecursive(Root);
         }
 
         // Find a node with a maximum value recursively
-        private Node<T> FindMax(Node<T> node)
+        private Node FindMaxRecursive(Node node)
         {
             if (node?.Right == null)
             {
@@ -80,22 +80,22 @@
             }
             else
             {
-                return FindMax(node.Right);
+                return FindMaxRecursive(node.Right);
             }
         }
 
         // Insert a node with a given value
         public void Insert(T value)
         {
-            Root = Insert(Root, value);
+            Root = InsertRecursive(Root, value);
         }
 
         // Insert a node with a given value recursively
-        private Node<T> Insert(Node<T> node, T value)
+        private Node InsertRecursive(Node node, T value)
         {
             if (node == null)
             {
-                return new Node<T>(value);
+                return new Node(value);
             }
 
             var cmp = Comparer<T>
@@ -105,13 +105,13 @@
             // Continue with its left sub-tree
             if (cmp < 0)
             {
-                node.Left = Insert(node.Left, value);
+                node.Left = InsertRecursive(node.Left, value);
             }
             // If a value is greater than the value of the current node
             // Continue with its right sub-tree
             else if (cmp > 0)
             {
-                node.Right = Insert(node.Right, value);
+                node.Right = InsertRecursive(node.Right, value);
             }
             // If a value is equal to the value of the current node
             // Increment its counter
@@ -126,11 +126,11 @@
         // Delete a node with a given value
         public void Delete(T value)
         {
-            Root = Delete(Root, value);
+            Root = DeleteRecursive(Root, value);
         }
 
         // Delete a node with a given value recursively
-        private Node<T> Delete(Node<T> node, T value)
+        private Node DeleteRecursive(Node node, T value)
         {
             if (node == null)
             {
@@ -144,13 +144,13 @@
             // Continue with its left sub-tree
             if (cmp < 0)
             {
-                node.Left = Delete(node.Left, value);
+                node.Left = DeleteRecursive(node.Left, value);
             }
             // If a value is greater than the value of the current node
             // Continue with its right sub-tree
             else if (cmp > 0)
             {
-                node.Right = Delete(node.Right, value);
+                node.Right = DeleteRecursive(node.Right, value);
             }
             // If a value is equal to the value of the current node
             // Decrement its counter
@@ -158,12 +158,12 @@
             {
                 node.Counter--;
 
-                // If its counter is less than 0
+                // If its counter is less than or equal to 0
                 // Delete a node
                 if (node.Counter <= 0)
                 {
-                    // If the current node has no left node
-                    // Delete the current node and return its right node (as its replacement)
+                    // If the current node has no left child node
+                    // Delete the current node and return its right child node (as its replacement)
                     if (node.Left == null)
                     {
                         var rightNode = node.Right;
@@ -173,8 +173,8 @@
 
                         return rightNode;
                     }
-                    // If the current node has no right node
-                    // Delete the current node and return its left node (as its replacement)
+                    // If the current node has no right child node
+                    // Delete the current node and return its left child node (as its replacement)
                     else if (node.Right == null)
                     {
                         var leftNode = node.Left;
@@ -190,14 +190,14 @@
                     else
                     {
                         // Find the largest value in its left sub-tree as its successor
-                        var successor = FindMax(node.Left);
+                        var successor = FindMaxRecursive(node.Left);
 
                         // Swap its value and counter
                         node.Value = successor.Value;
                         node.Counter = successor.Counter;
 
                         // Delete the successor
-                        node.Left = Delete(node.Left, successor.Value);
+                        node.Left = DeleteRecursive(node.Left, successor.Value);
                     }
                 }
             }
@@ -205,132 +205,271 @@
             return node;
         }
 
-        // Traverse via level order traversal (BFS)
+        // Traverse via level order traversal (BFS) non-recursively
         public List<T> LevelOrderTraverse()
         {
-            var list = new List<T>();
+            var result = new List<T>();
             if (Root == null)
             {
-                return list;
+                return result;
             }
 
-            // Define a queue
-            var queue = new Queue<Node<T>>();
+            // Create a queue
+            var queue = new Queue<Node>();
             // Add a root node to the queue
             queue.Enqueue(Root);
 
             // Continue until the queue is empty
-            while (queue.Count != 0)
+            while (queue.Any())
             {
-                // Get a node at the beginning of the queue (e.g. Dequeue)
-                var node = queue.Dequeue();
-                // Do something with a current node as required
-                DoSomething(node, list);
+                // Remove a node at the beginning of the queue
+                var cur = queue.Dequeue();
+                // Do something with the current node as required
+                DoSomething(result, cur);
 
-                // If there is a left node
-                if (node.Left != null)
+                // If there is a left child node
+                // Add it to the back of the queue first
+                if (cur.Left != null)
                 {
-                    // Add it to the back of the queue (e.g. Enqueue) first
-                    queue.Enqueue(node.Left);
+                    queue.Enqueue(cur.Left);
                 }
 
-                // If there is a right node
-                if (node.Right != null)
+                // If there is a right child node
+                // Add it to the back of the queue second
+                if (cur.Right != null)
                 {
-                    // Add it to the back of the queue (e.g. Enqueue) second
-                    queue.Enqueue(node.Right);
+                    queue.Enqueue(cur.Right);
                 }
             }
 
-            return list;
+            return result;
         }
 
-        // Traverse via pre-order traversal (DFS)
+        // Traverse via pre-order traversal (DFS) non-recursively
         public List<T> PreOrderTraverse()
         {
-            var list = new List<T>();
-            // Define a recursive function
-            void Traverse(Node<T> node)
+            var result = new List<T>();
+            if (Root == null)
+            {
+                return result;
+            }
+
+            // Create a stack
+            var stack = new Stack<Node>();
+            // Add a root node to the stack
+            stack.Push(Root);
+
+            // Continue until the stack is empty
+            while (stack.Any())
+            {
+                // Remove a node at the top of the stack
+                var cur = stack.Pop();
+                // Do something with the current node as required
+                DoSomething(result, cur);
+
+                // If there is a right child node
+                // Add it to the top of the stack first
+                if (cur.Right != null)
+                {
+                    stack.Push(cur.Right);
+                }
+
+                // If there is a left child node
+                // Add it to the top of the stack second
+                if (cur.Left != null)
+                {
+                    stack.Push(cur.Left);
+                }
+            }
+
+            return result;
+        }
+
+        // Traverse via pre-order traversal (DFS) recursively
+        public List<T> PreOrderTraverseRecursive()
+        {
+            var result = new List<T>();
+            // Create a recursive function
+            void Traverse(Node node)
             {
                 if (node != null)
                 {
-                    // Do something with a current node as required first
-                    DoSomething(node, list);
-                    // Call itself with a left node of the current node second
+                    // Do something with the current node as required first
+                    DoSomething(result, node);
+                    // Call itself with a left child node second
                     Traverse(node.Left);
-                    // Call itself with a right node of the current node third
+                    // Call itself with a right child node third
                     Traverse(node.Right);
                 }
             }
 
             // Call the recursive function with a root node
             Traverse(Root);
-            return list;
+            return result;
         }
 
-        // Traverse via post-order traversal (DFS)
+        // Traverse via post-order traversal (DFS) non-recursively
         public List<T> PostOrderTraverse()
         {
-            var list = new List<T>();
-            // Define a recursive function
-            void Traverse(Node<T> node)
+            var result = new List<T>();
+            if (Root == null)
+            {
+                return result;
+            }
+
+            // Create a stack
+            var stack = new Stack<Node>();
+            // Add a root node to the stack
+            stack.Push(Root);
+            // Keep track of the last visited node
+            Node last = null;
+
+            // Continue until the stack is empty
+            while (stack.Any())
+            {
+                // Get a node at the top of the stack
+                var cur = stack.Peek();
+
+                // Check if the current node has no child node
+                var isLeaf = cur.Left == null && cur.Right == null;
+                // Check if the subtree of the current node has been processed
+                // (1) last != null is to ensure that the first node with one child node is not flagged as processed
+                // Because the first node with one child node would return 'true' based on (cur.Left == last || cur.Right == last)
+                // (2) (cur.Left == last || cur.Right == last) is to check that the subtree of the current node has been processed
+                // Because the subtree has been processed if the current node is not a leaf and its left or right child node has been just visited
+                var isSubTreeProcessed = last != null && (cur.Left == last || cur.Right == last);
+
+                // If the current node is a leaf or its subtree has been processed
+                if (isLeaf || isSubTreeProcessed)
+                {
+                    // Remove the current node
+                    cur = stack.Pop();
+                    // Do something with the current node as required
+                    DoSomething(result, cur);
+                    // Set the last visited node properly
+                    last = cur;
+                }
+                // Otherwise
+                else
+                {
+                    // If there is a right child node
+                    // Add it to the top of the stack first
+                    if (cur.Right != null)
+                    {
+                        stack.Push(cur.Right);
+                    }
+
+                    // If there is a left child node
+                    // Add it to the top of the stack second
+                    if (cur.Left != null)
+                    {
+                        stack.Push(cur.Left);
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        // Traverse via post-order traversal (DFS) recursively
+        public List<T> PostOrderTraverseRecursive()
+        {
+            var result = new List<T>();
+            // Create a recursive function
+            void Traverse(Node node)
             {
                 if (node != null)
                 {
-                    // Call itself with a left node of the current node first
+                    // Call itself with a left child node first
                     Traverse(node.Left);
-                    // Call itself with a right node of the current node second
+                    // Call itself with a right child node second
                     Traverse(node.Right);
-                    // Do something with a current node as required third
-                    DoSomething(node, list);
+                    // Do something with the current node as required third
+                    DoSomething(result, node);
                 }
             }
 
             // Call the recursive function with a root node
             Traverse(Root);
-            return list;
+            return result;
         }
 
-        // Traverse via in-order traversal (DFS)
+        // Traverse via in-order traversal (DFS) non-recursively
         public List<T> InOrderTraverse()
         {
-            var list = new List<T>();
-            // Define a recursive function
-            void Traverse(Node<T> node)
+            var result = new List<T>();
+            if (Root == null)
+            {
+                return result;
+            }
+
+            // Create a stack
+            var stack = new Stack<Node>();
+            // Set a root node as current initially
+            var cur = Root;
+
+            // Continue until the stack is empty and the current is null
+            while (stack.Any() || cur != null)
+            {
+                // If the current is not null
+                if (cur != null)
+                {
+                    // Add it to the top of the stack (to defer it)
+                    stack.Push(cur);
+                    // Set the current to its left child node
+                    cur = cur.Left;
+                }
+                // If the current is null
+                else
+                {
+                    // Remove a node at the top of the stack (to process it)
+                    cur = stack.Pop();
+                    // Do something with the current node as required
+                    DoSomething(result, cur);
+                    // Set the current to its right child node
+                    cur = cur.Right;
+                }
+            }
+
+            return result;
+        }
+
+        // Traverse via in-order traversal (DFS) recursively
+        public List<T> InOrderTraverseRecursive()
+        {
+            var result = new List<T>();
+            // Create a recursive function
+            void Traverse(Node node)
             {
                 if (node != null)
                 {
-                    // Call itself with a left node of the current node first
+                    // Call itself with a left child node first
                     Traverse(node.Left);
-                    // Do something with a current node as required second
-                    DoSomething(node, list);
-                    // Call itself with a right node of the current node third
+                    // Do something with the current node as required second
+                    DoSomething(result, node);
+                    // Call itself with a right child node third
                     Traverse(node.Right);
                 }
             }
 
             // Call the recursive function with a root node
             Traverse(Root);
-            return list;
+            return result;
         }
 
-        private void DoSomething(Node<T> node, List<T> list = null)
+        private void DoSomething(List<T> result, Node node)
         {
-            Trace.WriteLine(node.Value);
-            if (list != null)
-            {
-                list.Add(node.Value);
-            }
+            result.Add(node.Value);
         }
 
-        public class Node<NodeT>
+        public class Node
         {
-            public NodeT Value { get; set; }
+            public T Value { get; set; }
             public int Counter { get; set; }
-            public Node<NodeT> Left { get; set; }
-            public Node<NodeT> Right { get; set; }
+            public Node Left { get; set; }
+            public Node Right { get; set; }
 
-            public Node(NodeT value)
+            public Node(T value)
             {
                 Value = value;
                 Counter = 1;
