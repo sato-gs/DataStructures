@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
 
+    // Dynamic array (e.g. array with resize feature)
     public class DynamicArray<T>
     {
         // Represent the array

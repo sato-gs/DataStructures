@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
 
+    // Static array (e.g. array with no resize feature)
     public class StaticArray<T>
     {
         // Represent the array
