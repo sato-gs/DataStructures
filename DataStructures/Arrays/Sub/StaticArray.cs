@@ -63,7 +63,7 @@
             _array[index] = value;
         }
 
-        // Add an item with a given value
+        // Add an item with a given value to the end of the array
         public void Add(T value)
         {
             if (IsFull)

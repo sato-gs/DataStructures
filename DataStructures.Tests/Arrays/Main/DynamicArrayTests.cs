@@ -177,7 +177,7 @@
         [TestCase(8)]
         [TestCase(9)]
         [TestCase(10)]
-        public void Add_WhenCalled_ShouldAddItemWithGivenValue(int range)
+        public void Add_WhenCalled_ShouldAddItemWithGivenValueToEndOfArray(int range)
         {
             // Arrange & Act
             for (var i = 1; i <= range; i++)

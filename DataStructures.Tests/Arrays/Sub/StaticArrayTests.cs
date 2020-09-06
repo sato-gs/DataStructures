@@ -185,7 +185,7 @@
         [TestCase(3)]
         [TestCase(4)]
         [TestCase(5)]
-        public void Add_WhenArrayIsNotFull_ShouldAddItemWithGivenValue(int range)
+        public void Add_WhenArrayIsNotFull_ShouldAddItemWithGivenValueToEndOfArray(int range)
         {
             // Arrange & Act
             for (var i = 1; i <= range; i++)
