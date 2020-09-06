@@ -16,6 +16,24 @@
         }
 
         [Test]
+        [TestCase(-100)]
+        [TestCase(0)]
+        public void Constructor_WhenCapacityIsLessThanOrEqualToZero_ShouldThrowInvalidOperationException(int capacity)
+        {
+            // Arrange & Act & Assert
+            Assert.Throws<InvalidOperationException>(() => new StaticArray<int>(capacity));
+        }
+
+        [Test]
+        [TestCase(1)]
+        [TestCase(100)]
+        public void Constructor_WhenCapacityIsGreaterThanZero_ShouldNotThrowInvalidOperationException(int capacity)
+        {
+            // Arrange & Act & Assert
+            Assert.DoesNotThrow(() => new StaticArray<int>(capacity));
+        }
+
+        [Test]
         [TestCase(0)]
         [TestCase(1)]
         [TestCase(2)]

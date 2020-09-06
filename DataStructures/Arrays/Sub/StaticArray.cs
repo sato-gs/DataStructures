@@ -31,6 +31,11 @@
 
         public StaticArray(int capacity)
         {
+            if (capacity <= 0)
+            {
+                throw new InvalidOperationException();
+            }
+
             _array = new T[capacity];
             Size = 0;
         }
