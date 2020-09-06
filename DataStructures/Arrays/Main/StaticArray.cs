@@ -46,7 +46,7 @@
             return _array[index];
         }
 
-        // Set an item stored at a given index
+        // Set an item to a given value stored at a given index
         public void Set(int index, T value)
         {
             if (index < 0 || index >= Size)
@@ -66,6 +66,23 @@
             }
 
             _array[Size++] = value;
+        }
+
+        // Add an item with a given value at a given index
+        public void AddAt(int index, T value)
+        {
+            if (index < 0 || index >= Size)
+            {
+                throw new IndexOutOfRangeException();
+            }
+
+            // Shift all items on the right side of the added item to the right by 1
+            for (var i = Size; i > index; i--)
+            {
+                _array[i] = _array[i - 1];
+            }
+            _array[index] = value;
+            Size++;
         }
 
         // Remove an item with a given value
@@ -104,7 +121,7 @@
         // Clear the array
         public void Clear()
         {
-            // Note that the helper function can be alternatively used as follows
+            // Note that C# built-in function can be alternatively used as follows
             // Array.Clear(_array, 0, Size);
             for (var i = 0; i < Size; i++)
             {

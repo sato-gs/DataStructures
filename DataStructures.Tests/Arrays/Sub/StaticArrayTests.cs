@@ -133,7 +133,7 @@
         [TestCase(2, 100)]
         [TestCase(3, 100)]
         [TestCase(4, 100)]
-        public void Set_WhenIndexIsNotOutOfRange_ShouldSetItemAtGivenIndex(int index, int value)
+        public void Set_WhenIndexIsNotOutOfRange_ShouldSetItemToGivenValueAtGivenIndex(int index, int value)
         {
             // Arrange
             for (var i = 1; i <= _capacity; i++)
@@ -180,6 +180,43 @@
             for (var i = 1; i <= range; i++)
             {
                 Assert.That(_array.Get(i - 1), Is.EqualTo(i));
+            }
+        }
+
+        [Test]
+        [TestCase(-1, -1)]
+        [TestCase(100, 100)]
+        public void AddAt_WhenIndexIsOutOfRange_ShouldThrowOutOfRangeException(int index, int value)
+        {
+            // Arrange & Act & Assert
+            Assert.Throws<IndexOutOfRangeException>(() => _array.AddAt(index, value));
+        }
+
+        [Test]
+        [TestCase(0, 100)]
+        [TestCase(1, 100)]
+        [TestCase(2, 100)]
+        [TestCase(3, 100)]
+        public void AddAt_WhenIndexIsNotOutOfRange_ShouldAddItemWithGivenValueAtGivenIndex(int index, int value)
+        {
+            // Arrange
+            for (var i = 0; i < _capacity - 1; i++)
+            {
+                _array.Add(i);
+            }
+
+            // Act
+            _array.AddAt(index, value);
+
+            // Assert
+            Assert.That(_array.Size, Is.EqualTo(_capacity));
+            for (var i = 0; i < index; i++)
+            {
+                Assert.That(_array.Get(i), Is.EqualTo(i));
+            }
+            for (var i = index; i < _capacity; i++)
+            {
+                Assert.That(_array.Get(i), Is.EqualTo(i == index ? value : i - 1));
             }
         }
 
