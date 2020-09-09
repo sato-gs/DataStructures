@@ -136,7 +136,7 @@
             Size = 0;
         }
 
-        // Return an index of an item with a given value
+        // Return the index of an item with a given value
         public int IndexOf(T value)
         {
             for (var i = 0; i < Size; i++)
