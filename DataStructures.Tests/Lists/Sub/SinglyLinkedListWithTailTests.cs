@@ -538,7 +538,7 @@
             // Arrange
             for (var i = 0; i <= range; i++)
             {
-                _list.AddLast(i);
+                _list.Add(i);
             }
             var head = _list.Get(0);
             var tail = _list.Get(_list.Size - 1);
