@@ -163,7 +163,7 @@
             Assert.That(prev?.Next, Is.EqualTo(index == 0 ? null : result));
             Assert.That(result.Next, Is.EqualTo(next));
             Assert.That(_list.Size, Is.EqualTo(prevSize + 1));
-            if (prevSize == 0)
+            if (index == 0)
             {
                 Assert.That(_list.Head, Is.EqualTo(result));
             }

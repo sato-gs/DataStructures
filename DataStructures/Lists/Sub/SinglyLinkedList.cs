@@ -46,7 +46,7 @@
             AddAtInclusive(index, value);
         }
 
-        // Add a node with a given value at a given index (inclusive)
+        // Add a node with a given value at a given index (inclusive of the tail)
         private void AddAtInclusive(int index, T value)
         {
             if (index == 0)
