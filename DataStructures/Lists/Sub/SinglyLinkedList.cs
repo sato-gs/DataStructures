@@ -1,23 +1,20 @@
 ﻿namespace DataStructures.Lists.Sub
 {
     using System;
+    using System.Collections.Generic;
 
     // Singly linked list without tail
     public class SinglyLinkedList<T>
     {
-        // Represent the current size of the linked list
+        // Represent the number of nodes stored in the linked list
         public int Size { get; private set; }
-        // Represent the current head of the linked list
-        public Node<T> Head { get; private set; }
+        // Represent the head of the linked list
+        public Node Head { get; private set; }
 
-        // Get a node at the specified index
-        public Node<T> GetAt(int index)
+        // Get a node stored at a given index
+        public Node Get(int index)
         {
-            if (index < 0 || index >= Size)
-            {
-                throw new IndexOutOfRangeException();
-            }
-
+            CheckBounds(index);
             var counter = 0;
             var cur = Head;
             while (counter != index)
@@ -29,76 +26,161 @@
             return cur;
         }
 
-        // Set a node at the specified index
-        public void SetAt(int index, T value)
+        // Set a node to a given value stored at a given index
+        public void Set(int index, T value)
         {
-            var node = GetAt(index);
+            var node = Get(index);
             node.Value = value;
         }
 
-        // Add a node to the specified index
+        // Add a node with a given value to the tail of the linked list
+        public void Add(T value)
+        {
+            AddLast(value);
+        }
+
+        // Add a node with a given value at a given index
         public void AddAt(int index, T value)
+        {
+            CheckBounds(index);
+            AddAtInclusive(index, value);
+        }
+
+        // Add a node with a given value at a given index (inclusive)
+        private void AddAtInclusive(int index, T value)
         {
             if (index == 0)
             {
-                var head = new Node<T>(value, Head);
+                var head = new Node(value, Head);
                 Head = head;
                 Size++;
                 return;
             }
 
-            var prev = GetAt(index - 1);
-            var cur = prev.Next;
-            prev.Next = new Node<T>(value, cur);
+            var prev = Get(index - 1);
+            var next = prev.Next;
+            prev.Next = new Node(value, next);
             Size++;
         }
 
-        // Add a node to the head of the list
+        // Add a node with a given value to the head of the linked list
         public void AddFirst(T value)
         {
-            AddAt(0, value);
+            AddAtInclusive(0, value);
         }
 
-        // Add a node to the tail of the list
+        // Add a node with a given value to the tail of the linked list
         public void AddLast(T value)
         {
-            AddAt(Size, value);
+            AddAtInclusive(Size, value);
         }
 
-        // Remove a node from the specified index
-        public Node<T> RemoveAt(int index)
+        // Remove a node with a given value
+        public bool Remove(T value)
         {
+            Node prev = null;
+            var cur = Head;
+            while (cur != null)
+            {
+                if (cur.EqualTo(value))
+                {
+                    if (cur == Head)
+                    {
+                        Head = cur.Next;
+                    }
+                    else
+                    {
+                        prev.Next = cur.Next;
+                    }
+                    Size--;
+
+                    // Free memory by breaking associations
+                    cur.Next = null;
+                    cur = null;
+                    return true;
+                }
+                prev = cur;
+                cur = cur.Next;
+            }
+
+            return false;
+        }
+
+        // Remove a node stored at a given index
+        public Node RemoveAt(int index)
+        {
+            CheckBounds(index);
             if (index == 0)
             {
                 var head = Head;
-                Head = head?.Next;
-                Size = Math.Max(0, Size - 1);
+                Head = head.Next;
+                Size--;
                 return head;
             }
 
-            var prev = GetAt(index - 1);
+            var prev = Get(index - 1);
             var cur = prev.Next;
-            prev.Next = cur?.Next;
+            prev.Next = cur.Next;
             Size--;
             return cur;
         }
 
-        // Remove a node from the head of the list
-        public Node<T> RemoveFirst()
+        // Remove a node from the head of the linked list
+        public Node RemoveFirst()
         {
             return RemoveAt(0);
         }
 
-        // Remove a node from the tail of the list
-        public Node<T> RemoveLast()
+        // Remove a node from the tail of the linked list
+        public Node RemoveLast()
         {
-            return RemoveAt(Math.Max(0, Size - 1));
+            return RemoveAt(Size - 1);
+        }
+
+        // Clear nodes
+        public void Clear()
+        {
+            var cur = Head;
+            while (cur != null)
+            {
+                var next = cur.Next;
+                // Free memory by breaking associations
+                cur.Next = null;
+                cur = null;
+                cur = next;
+            }
+            Head = null;
+            Size = 0;
+        }
+
+        // Return the index of a node with a given value
+        public int IndexOf(T value)
+        {
+            var counter = 0;
+            var cur = Head;
+            while (cur != null)
+            {
+                if (cur.EqualTo(value))
+                {
+                    return counter;
+                }
+                counter++;
+                cur = cur.Next;
+            }
+
+            return -1;
+        }
+
+        // Check whether a node with a given value exists
+        public bool Contains(T value)
+        {
+            return IndexOf(value) != -1;
         }
 
         // Reverse nodes
         public void Reverse()
         {
-            Node<T> prev = null;
+            Node prev = null;
             var cur = Head;
             while (cur != null)
             {
@@ -114,18 +196,34 @@
             }
         }
 
-        public class Node<NodeT>
+        // Check the bounds of the linked list
+        private void CheckBounds(int index)
         {
+            if (index < 0 || index >= Size)
+            {
+                throw new IndexOutOfRangeException();
+            }
+        }
+
+        public class Node
+        {
+            public T Value { get; set; }
+            public Node Next { get; set; }
+
             public Node(
-                NodeT value,
-                Node<NodeT> next = null)
+                T value,
+                Node next = null)
             {
                 Value = value;
                 Next = next;
             }
 
-            public NodeT Value { get; set; }
-            public Node<NodeT> Next { get; set; }
+            public bool EqualTo(T comparison)
+            {
+                return Comparer<T>
+                    .Default
+                    .Compare(Value, comparison) == 0;
+            }
         }
     }
 }
