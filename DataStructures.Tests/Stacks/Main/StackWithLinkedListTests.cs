@@ -1,4 +1,4 @@
-﻿namespace DataStructures.Tests.Stacks.Sub
+﻿namespace DataStructures.Tests.Stacks.Main
 {
     using System;
     using DataStructures.Stacks.Sub;

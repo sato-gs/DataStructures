@@ -1,17 +1,36 @@
-﻿namespace DataStructures.Tests.Stacks.Sub
+﻿namespace DataStructures.Tests.Stacks.Main
 {
     using System;
     using DataStructures.Stacks.Sub;
     using NUnit.Framework;
 
-    public class StackWithLinkedListTests
+    public class StackWithArrayTests
     {
-        private StackWithLinkedList<int> _stack;
+        private StackWithArray<int> _stack;
+        private readonly int _capacity = 5;
 
         [SetUp]
         public void SetUp()
         {
-            _stack = new StackWithLinkedList<int>();
+            _stack = new StackWithArray<int>(_capacity);
+        }
+
+        [Test]
+        [TestCase(-100)]
+        [TestCase(0)]
+        public void Constructor_WhenCapacityIsLessThanOrEqualToZero_ShouldThrowInvalidOperationException(int capacity)
+        {
+            // Arrange & Act & Assert
+            Assert.Throws<InvalidOperationException>(() => new StackWithArray<int>(capacity));
+        }
+
+        [Test]
+        [TestCase(1)]
+        [TestCase(100)]
+        public void Constructor_WhenCapacityIsGreaterThanZero_ShouldNotThrowInvalidOperationException(int capacity)
+        {
+            // Arrange & Act & Assert
+            Assert.DoesNotThrow(() => new StackWithArray<int>(capacity));
         }
 
         [Test]
@@ -65,6 +84,29 @@
         }
 
         [Test]
+        public void IsFull_WhenStackIsFull_ShouldReturnTrue()
+        {
+            // Arrange
+            for (var i = 1; i <= _capacity; i++)
+            {
+                _stack.Push(i);
+            }
+
+            // Act
+            var result = _stack.IsFull;
+
+            // Assert
+            Assert.That(result, Is.EqualTo(true));
+        }
+
+        [Test]
+        public void IsFull_WhenStackIsNotFull_ShouldReturnFalse()
+        {
+            // Arrange & Act & Assert
+            Assert.That(_stack.IsFull, Is.EqualTo(false));
+        }
+
+        [Test]
         public void Peek_WhenStackIsEmpty_ShouldThrowInvalidOperationException()
         {
             // Arrange & Act & Assert
@@ -93,14 +135,21 @@
         }
 
         [Test]
-        [TestCase(1)]
-        [TestCase(2)]
-        [TestCase(3)]
-        [TestCase(4)]
-        [TestCase(5)]
-        public void Push_WhenCalled_ShouldAddItemToTopOfStack(int range)
+        [TestCase(1, 1)]
+        [TestCase(1, 10)]
+        [TestCase(1, 100)]
+        [TestCase(50, 1)]
+        [TestCase(50, 10)]
+        [TestCase(50, 100)]
+        [TestCase(100, 1)]
+        [TestCase(100, 10)]
+        [TestCase(100, 100)]
+        public void Push_WhenCalled_ShouldAddItemToTopOfStack(int capacity, int range)
         {
-            // Arrange & Act
+            // Arrange
+            _stack = new StackWithArray<int>(capacity);
+
+            // Act
             for (var i = 1; i <= range; i++)
             {
                 _stack.Push(i);
