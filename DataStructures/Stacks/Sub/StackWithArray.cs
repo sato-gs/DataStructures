@@ -2,7 +2,7 @@
 {
     using System;
 
-    // Stack implemented using Array
+    // Stack implemented using array
     public class StackWithArray<T>
     {
         // Represent the stack

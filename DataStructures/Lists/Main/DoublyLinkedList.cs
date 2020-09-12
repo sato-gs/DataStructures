@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
 
-    // Doubly linked list without tail
+    // Doubly linked list
     public class DoublyLinkedList<T>
     {
         // Represent the number of nodes stored in the linked list

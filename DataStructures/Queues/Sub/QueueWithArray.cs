@@ -2,7 +2,7 @@
 {
     using System;
 
-    // Queue implemented using Array
+    // Queue implemented using array
     public class QueueWithArray<T>
     {
         // Represent the queue

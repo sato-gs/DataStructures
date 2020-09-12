@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
 
-    // Singly linked list without tail
+    // Singly linked list
     public class SinglyLinkedList<T>
     {
         // Represent the number of nodes stored in the linked list

@@ -2,7 +2,7 @@
 {
     using System;
 
-    // Queue implemented using pointer Array
+    // Queue implemented using pointer array
     public class QueueWithPointerArray<T>
     {
         // Represent the queue
