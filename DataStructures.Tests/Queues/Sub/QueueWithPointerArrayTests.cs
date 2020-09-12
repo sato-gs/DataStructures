@@ -4,14 +4,33 @@
     using DataStructures.Queues.Sub;
     using NUnit.Framework;
 
-    public class QueueWithLinkedListTests
+    public class QueueWithPointerArrayTests
     {
-        private QueueWithLinkedList<int> _queue;
+        private QueueWithPointerArray<int> _queue;
+        private readonly int _capacity = 5;
 
         [SetUp]
         public void SetUp()
         {
-            _queue = new QueueWithLinkedList<int>();
+            _queue = new QueueWithPointerArray<int>(_capacity);
+        }
+
+        [Test]
+        [TestCase(-100)]
+        [TestCase(0)]
+        public void Constructor_WhenCapacityIsLessThanOrEqualToZero_ShouldThrowInvalidOperationException(int capacity)
+        {
+            // Arrange & Act & Assert
+            Assert.Throws<InvalidOperationException>(() => new QueueWithPointerArray<int>(capacity));
+        }
+
+        [Test]
+        [TestCase(1)]
+        [TestCase(100)]
+        public void Constructor_WhenCapacityIsGreaterThanZero_ShouldNotThrowInvalidOperationException(int capacity)
+        {
+            // Arrange & Act & Assert
+            Assert.DoesNotThrow(() => new QueueWithPointerArray<int>(capacity));
         }
 
         [Test]
@@ -65,6 +84,29 @@
         }
 
         [Test]
+        public void IsFull_WhenQueueIsFull_ShouldReturnTrue()
+        {
+            // Arrange
+            for (var i = 1; i <= _capacity; i++)
+            {
+                _queue.Enqueue(i);
+            }
+
+            // Act
+            var result = _queue.IsFull;
+
+            // Assert
+            Assert.That(result, Is.EqualTo(true));
+        }
+
+        [Test]
+        public void IsFull_WhenQueueIsNotFull_ShouldReturnFalse()
+        {
+            // Arrange & Act & Assert
+            Assert.That(_queue.IsFull, Is.EqualTo(false));
+        }
+
+        [Test]
         public void Peek_WhenQueueIsEmpty_ShouldThrowInvalidOperationException()
         {
             // Arrange & Act & Assert
@@ -93,14 +135,21 @@
         }
 
         [Test]
-        [TestCase(1)]
-        [TestCase(2)]
-        [TestCase(3)]
-        [TestCase(4)]
-        [TestCase(5)]
-        public void Enqueue_WhenCalled_ShouldAddItemToBackOfQueue(int range)
+        [TestCase(1, 1)]
+        [TestCase(1, 10)]
+        [TestCase(1, 100)]
+        [TestCase(50, 1)]
+        [TestCase(50, 10)]
+        [TestCase(50, 100)]
+        [TestCase(100, 1)]
+        [TestCase(100, 10)]
+        [TestCase(100, 100)]
+        public void Enqueue_WhenCalled_ShouldAddItemToBackOfQueue(int capacity, int range)
         {
-            // Arrange & Act
+            // Arrange
+            _queue = new QueueWithPointerArray<int>(capacity);
+
+            // Act
             for (var i = 1; i <= range; i++)
             {
                 _queue.Enqueue(i);
