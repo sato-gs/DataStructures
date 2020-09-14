@@ -3,20 +3,23 @@
     using System;
     using System.Collections.Generic;
 
-    // Min heap implemented using static Array (e.g. Array without resize feature)
-    public class MinHeapWithStaticArray<T>
+    // Min heap implemented using array
+    public class MinHeapWithArray<T>
     {
         // Represent the heap
-        private readonly T[] _heap;
-        // Represent the current size of the heap
-        private int _size;
+        private T[] _heap;
+        // Represent the default capacity of the heap
+        private readonly int _defaultCapacity = 5;
+
+        // Represent the number of items stored in the heap
+        public int Size { get; private set; }
 
         // Represent whether the heap is empty or not
         public bool IsEmpty
         {
             get
             {
-                return _size == 0;
+                return Size == 0;
             }
         }
 
@@ -25,38 +28,25 @@
         {
             get
             {
-                return _size == _heap.Length;
+                return Size == _heap.Length;
             }
         }
 
-        // Represent the number of items stored in the heap
-        public int Count
+        public MinHeapWithArray()
         {
-            get
+            _heap = new T[_defaultCapacity];
+            Size = 0;
+        }
+
+        public MinHeapWithArray(int capacity)
+        {
+            if (capacity <= 0)
             {
-                return _size;
+                throw new InvalidOperationException();
             }
-        }
 
-        public MinHeapWithStaticArray(int capacity)
-        {
             _heap = new T[capacity];
-            _size = 0;
-        }
-
-        // Insert an item while maintaining the min heap property
-        public void Insert(T value)
-        {
-            if (IsFull)
-            {
-                throw new InvalidOperationException("The heap is full.");
-            }
-
-            // Add an item to the end of the heap
-            _heap[_size] = value;
-            _size++;
-            // Restructure the heap to maintain the min heap property
-            HeapifyUp(_size - 1);
+            Size = 0;
         }
 
         // Return a minimum item
@@ -70,7 +60,22 @@
             return _heap[0];
         }
 
-        // Remove a minimum item while maintaining the min heap property
+        // Insert an item with a given value (while maintaining the min heap property)
+        public void Insert(T value)
+        {
+            if (IsFull)
+            {
+                Resize(Math.Max(_defaultCapacity, _heap.Length * 2));
+            }
+
+            // Add an item to the end of the heap
+            _heap[Size] = value;
+            Size++;
+            // Restructure the heap to maintain the min heap property
+            HeapifyUp(Size - 1);
+        }
+
+        // Remove a minimum item (while maintaining the min heap property)
         public T PopMin()
         {
             if (IsEmpty)
@@ -80,9 +85,9 @@
 
             // Remove a minimum item from the top of the heap and replace it with the last item
             var min = _heap[0];
-            _heap[0] = _heap[_size - 1];
-            _heap[_size - 1] = default;
-            _size--;
+            _heap[0] = _heap[Size - 1];
+            _heap[Size - 1] = default;
+            Size--;
             // Restructure the heap to maintain the min heap property
             HeapifyDown(0);
 
@@ -111,10 +116,10 @@
         private T GetRightChild(int index) => _heap[GetRightChildIndex(index)];
 
         // Check whether an item stored at a given index has a left child or not
-        private bool HasLeftChild(int index) => GetLeftChildIndex(index) < _size;
+        private bool HasLeftChild(int index) => GetLeftChildIndex(index) < Size;
 
         // Check whether an item stored at a given index has a right child or not
-        private bool HasRightChild(int index) => GetRightChildIndex(index) < _size;
+        private bool HasRightChild(int index) => GetRightChildIndex(index) < Size;
 
         // Restructure the heap bottom-up in such ways that the min heap property is maintained
         private void HeapifyUp(int index)
@@ -129,7 +134,7 @@
             var cur = _heap[index];
             var parentIndex = GetParentIndex(index);
 
-            // If a current child is equal to or larger than its parent
+            // If the current child is equal to or greater than its parent
             // Break out of the recursion
             var cmp = Comparer<T>
                 .Default
@@ -161,7 +166,7 @@
                 smallerChildIndex = GetRightChildIndex(index);
             }
 
-            // If a current parent is equal to or smaller than its smaller child
+            // If the current parent is equal to or less than its smaller child
             // Break out of the recursion
             var cmp = Comparer<T>
                 .Default
@@ -182,6 +187,19 @@
             var temp = _heap[index1];
             _heap[index1] = _heap[index2];
             _heap[index2] = temp;
+        }
+
+        // Resize the heap to a given capacity
+        private void Resize(int capacity)
+        {
+            var heap = new T[capacity];
+            // Note that C# built-in function can be alternatively used as follows
+            // Array.Copy(_heap, heap, Size);
+            for (var i = 0; i < Size; i++)
+            {
+                heap[i] = _heap[i];
+            }
+            _heap = heap;
         }
     }
 }

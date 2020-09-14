@@ -3,22 +3,23 @@
     using System;
     using System.Collections.Generic;
 
-    // Max heap implemented using dynamic Array (e.g. Array with resize feature)
-    public class MaxHeapWithDynamicArray<T>
+    // Max heap implemented using array
+    public class MaxHeapWithArray<T>
     {
         // Represent the heap
         private T[] _heap;
-        // Represent the current size of the heap
-        private int _size;
         // Represent the default capacity of the heap
         private readonly int _defaultCapacity = 5;
+
+        // Represent the number of items stored in the heap
+        public int Size { get; private set; }
 
         // Represent whether the heap is empty or not
         public bool IsEmpty
         {
             get
             {
-                return _size == 0;
+                return Size == 0;
             }
         }
 
@@ -27,44 +28,25 @@
         {
             get
             {
-                return _size == _heap.Length;
+                return Size == _heap.Length;
             }
         }
 
-        // Represent the number of items stored in the heap
-        public int Count
-        {
-            get
-            {
-                return _size;
-            }
-        }
-
-        public MaxHeapWithDynamicArray()
+        public MaxHeapWithArray()
         {
             _heap = new T[_defaultCapacity];
-            _size = 0;
+            Size = 0;
         }
 
-        public MaxHeapWithDynamicArray(int capacity)
+        public MaxHeapWithArray(int capacity)
         {
-            _heap = new T[capacity];
-            _size = 0;
-        }
-
-        // Insert an item while maintaining the max heap property
-        public void Insert(T value)
-        {
-            if (IsFull)
+            if (capacity <= 0)
             {
-                Resize(Math.Max(_defaultCapacity, _heap.Length * 2));
+                throw new InvalidOperationException();
             }
 
-            // Add an item to the end of the heap
-            _heap[_size] = value;
-            _size++;
-            // Restructure the heap to maintain the max heap property
-            HeapifyUp(_size - 1);
+            _heap = new T[capacity];
+            Size = 0;
         }
 
         // Return a maximum item
@@ -78,7 +60,22 @@
             return _heap[0];
         }
 
-        // Remove a maximum item while maintaining the max heap property
+        // Insert an item with a given value (while maintaining the max heap property)
+        public void Insert(T value)
+        {
+            if (IsFull)
+            {
+                Resize(Math.Max(_defaultCapacity, _heap.Length * 2));
+            }
+
+            // Add an item to the end of the heap
+            _heap[Size] = value;
+            Size++;
+            // Restructure the heap to maintain the max heap property
+            HeapifyUp(Size - 1);
+        }
+
+        // Remove a maximum item (while maintaining the max heap property)
         public T PopMax()
         {
             if (IsEmpty)
@@ -88,9 +85,9 @@
 
             // Remove a maximum item from the top of the heap and replace it with the last item
             var max = _heap[0];
-            _heap[0] = _heap[_size - 1];
-            _heap[_size - 1] = default;
-            _size--;
+            _heap[0] = _heap[Size - 1];
+            _heap[Size - 1] = default;
+            Size--;
             // Restructure the heap to maintain the max heap property
             HeapifyDown(0);
 
@@ -119,10 +116,10 @@
         private T GetRightChild(int index) => _heap[GetRightChildIndex(index)];
 
         // Check whether an item stored at a given index has a left child or not
-        private bool HasLeftChild(int index) => GetLeftChildIndex(index) < _size;
+        private bool HasLeftChild(int index) => GetLeftChildIndex(index) < Size;
 
         // Check whether an item stored at a given index has a right child or not
-        private bool HasRightChild(int index) => GetRightChildIndex(index) < _size;
+        private bool HasRightChild(int index) => GetRightChildIndex(index) < Size;
 
         // Restructure the heap bottom-up in such ways that the max heap property is maintained
         private void HeapifyUp(int index)
@@ -137,7 +134,7 @@
             var cur = _heap[index];
             var parentIndex = GetParentIndex(index);
 
-            // If a current child is equal to or smaller than its parent
+            // If the current child is equal to or less than its parent
             // Break out of the recursion
             var cmp = Comparer<T>
                 .Default
@@ -169,7 +166,7 @@
                 largerChildIndex = GetRightChildIndex(index);
             }
 
-            // If a current parent is equal to or larger than its larger child
+            // If the current parent is equal to or greater than its larger child
             // Break out of the recursion
             var cmp = Comparer<T>
                 .Default
@@ -192,12 +189,17 @@
             _heap[index2] = temp;
         }
 
-        // Resize the heap
-        private void Resize(int size)
+        // Resize the heap to a given capacity
+        private void Resize(int capacity)
         {
-            var array = new T[size];
-            Array.Copy(_heap, 0, array, 0, _size);
-            _heap = array;
+            var heap = new T[capacity];
+            // Note that C# built-in function can be alternatively used as follows
+            // Array.Copy(_heap, heap, Size);
+            for (var i = 0; i < Size; i++)
+            {
+                heap[i] = _heap[i];
+            }
+            _heap = heap;
         }
     }
 }

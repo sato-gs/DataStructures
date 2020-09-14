@@ -96,9 +96,9 @@
         }
 
         // Resize the stack to a given capacity
-        private void Resize(int size)
+        private void Resize(int capacity)
         {
-            var stack = new T[size];
+            var stack = new T[capacity];
             // Note that C# built-in function can be alternatively used as follows
             // Array.Copy(_stack, stack, Size);
             for (var i = 0; i < Size; i++)

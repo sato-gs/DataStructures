@@ -6,15 +6,14 @@
     using DataStructures.Heaps.Sub;
     using NUnit.Framework;
 
-    public class MaxHeapWithStaticArrayTests
+    public class MaxHeapWithArrayTests
     {
-        private MaxHeapWithStaticArray<int> _heap;
+        private MaxHeapWithArray<int> _heap;
         private readonly int _capacity = 10;
         private readonly int[] _values = new int[] { 5, 3, 7, 2, 4, 6, 9, 1, 8, 10 };
 
         private readonly Dictionary<int, int[]> _answersForInsertion = new Dictionary<int, int[]>()
         {
-
             { 1, new int[] { 5 } },
             /* (1)
 			            5
@@ -174,7 +173,47 @@
         [SetUp]
         public void SetUp()
         {
-            _heap = new MaxHeapWithStaticArray<int>(_capacity);
+            _heap = new MaxHeapWithArray<int>(_capacity);
+        }
+
+        [Test]
+        [TestCase(-100)]
+        [TestCase(0)]
+        public void Constructor_WhenCapacityIsLessThanOrEqualToZero_ShouldThrowInvalidOperationException(int capacity)
+        {
+            // Arrange & Act & Assert
+            Assert.Throws<InvalidOperationException>(() => new MaxHeapWithArray<int>(capacity));
+        }
+
+        [Test]
+        [TestCase(1)]
+        [TestCase(100)]
+        public void Constructor_WhenCapacityIsGreaterThanZero_ShouldNotThrowInvalidOperationException(int capacity)
+        {
+            // Arrange & Act & Assert
+            Assert.DoesNotThrow(() => new MaxHeapWithArray<int>(capacity));
+        }
+
+        [Test]
+        [TestCase(0)]
+        [TestCase(1)]
+        [TestCase(2)]
+        [TestCase(3)]
+        [TestCase(4)]
+        [TestCase(5)]
+        public void Size_WhenCalled_ShouldReturnNumberOfItems(int range)
+        {
+            // Arrange
+            for (var i = 1; i <= range; i++)
+            {
+                _heap.Insert(i);
+            }
+
+            // Act
+            var result = _heap.Size;
+
+            // Assert
+            Assert.That(result, Is.EqualTo(range));
         }
 
         [Test]
@@ -185,10 +224,18 @@
         }
 
         [Test]
-        public void IsEmpty_WhenHeapIsNotEmpty_ShouldReturnFalse()
+        [TestCase(1)]
+        [TestCase(2)]
+        [TestCase(3)]
+        [TestCase(4)]
+        [TestCase(5)]
+        public void IsEmpty_WhenHeapIsNotEmpty_ShouldReturnFalse(int range)
         {
             // Arrange
-            _heap.Insert(1);
+            for (var i = 1; i <= range; i++)
+            {
+                _heap.Insert(i);
+            }
 
             // Act
             var result = _heap.IsEmpty;
@@ -221,58 +268,6 @@
         }
 
         [Test]
-        [TestCase(0)]
-        [TestCase(1)]
-        [TestCase(2)]
-        [TestCase(3)]
-        [TestCase(4)]
-        [TestCase(5)]
-        public void Count_WhenCalled_ShouldReturnNumberOfItems(int range)
-        {
-            // Arrange
-            for (var i = 1; i <= range; i++)
-            {
-                _heap.Insert(i);
-            }
-
-            // Act
-            var result = _heap.Count;
-
-            // Assert
-            Assert.That(result, Is.EqualTo(range));
-        }
-
-        [Test]
-        public void Insert_WhenHeapIsFull_ShouldThrowInvalidOperationException()
-        {
-            // Arrange
-            for (var i = 1; i <= _capacity; i++)
-            {
-                _heap.Insert(i);
-            }
-
-            // Act & Assert
-            Assert.Throws<InvalidOperationException>(() => _heap.Insert(100));
-        }
-
-        [Test]
-        public void Insert_WhenHeapIsNotFull_ShouldInsertItemWithMaxHeapPropertyMaintained()
-        {
-            // Arrange & Act & Assert
-            for (var i = 0; i < _values.Length; i++)
-            {
-                _heap.Insert(_values[i]);
-                var answer = _answersForInsertion[i + 1];
-                Assert.That(_heap.PeekMax(), Is.EqualTo(answer.Max()));
-                Assert.That(_heap.Count, Is.EqualTo(i + 1));
-                for (var j = 0; j < answer.Length; j++)
-                {
-                    Assert.That(_heap.GetAt(j), Is.EqualTo(answer[j]));
-                }
-            }
-        }
-
-        [Test]
         public void PeekMax_WhenHeapIsEmpty_ShouldThrowInvalidOperationException()
         {
             // Arrange & Act & Assert
@@ -288,7 +283,24 @@
                 _heap.Insert(_values[i]);
                 var answer = _answersForInsertion[i + 1];
                 Assert.That(_heap.PeekMax(), Is.EqualTo(answer.Max()));
-                Assert.That(_heap.Count, Is.EqualTo(i + 1));
+                Assert.That(_heap.Size, Is.EqualTo(i + 1));
+            }
+        }
+
+        [Test]
+        public void Insert_WhenCalled_ShouldInsertItemWithGivenValueWithMaxHeapPropertyMaintained()
+        {
+            // Arrange & Act & Assert
+            for (var i = 0; i < _values.Length; i++)
+            {
+                _heap.Insert(_values[i]);
+                var answer = _answersForInsertion[i + 1];
+                Assert.That(_heap.PeekMax(), Is.EqualTo(answer.Max()));
+                Assert.That(_heap.Size, Is.EqualTo(i + 1));
+                for (var j = 0; j < answer.Length; j++)
+                {
+                    Assert.That(_heap.GetAt(j), Is.EqualTo(answer[j]));
+                }
             }
         }
 
@@ -313,7 +325,7 @@
             {
                 var answer = _answersForDeletion[i + 1];
                 Assert.That(_heap.PopMax(), Is.EqualTo(_values.Length - i));
-                Assert.That(_heap.Count, Is.EqualTo(_values.Length - i - 1));
+                Assert.That(_heap.Size, Is.EqualTo(_values.Length - i - 1));
                 for (var j = 0; j < answer.Length; j++)
                 {
                     Assert.That(_heap.GetAt(j), Is.EqualTo(answer[j]));

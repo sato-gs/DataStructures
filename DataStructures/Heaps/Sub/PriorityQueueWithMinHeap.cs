@@ -2,22 +2,23 @@
 {
     using System;
 
-    // Priority queue implemented using min heap (e.g. the smaller the priority is, the higher the priority is)
+    // Priority queue implemented using min heap
     public class PriorityQueueWithMinHeap<T>
     {
         // Represent the priority queue
-        private Node<T>[] _queue;
-        // Represent the current size of the priority queue
-        private int _size;
+        private Node[] _queue;
         // Represent the default capacity of the priority queue
         private readonly int _defaultCapacity = 5;
+
+        // Represent the number of items stored in the priority queue
+        public int Size { get; private set; }
 
         // Represent whether the priority queue is empty or not
         public bool IsEmpty
         {
             get
             {
-                return _size == 0;
+                return Size == 0;
             }
         }
 
@@ -26,50 +27,29 @@
         {
             get
             {
-                return _size == _queue.Length;
-            }
-        }
-
-        // Represent the number of items stored in the priority queue
-        public int Count
-        {
-            get
-            {
-                return _size;
+                return Size == _queue.Length;
             }
         }
 
         public PriorityQueueWithMinHeap()
         {
-            _queue = new Node<T>[_defaultCapacity];
-            _size = 0;
+            _queue = new Node[_defaultCapacity];
+            Size = 0;
         }
 
         public PriorityQueueWithMinHeap(int capacity)
         {
-            _queue = new Node<T>[capacity];
-            _size = 0;
-        }
-
-        // Add an item while maintaining the priority property
-        public void Enqueue(
-            int priority,
-            T value)
-        {
-            if (IsFull)
+            if (capacity <= 0)
             {
-                Resize(Math.Max(_defaultCapacity, _queue.Length * 2));
+                throw new InvalidOperationException();
             }
 
-            // Add an item to the end of the priority queue
-            _queue[_size] = new Node<T>(priority, value);
-            _size++;
-            // Restructure the priority queue to maintain the priority property
-            RestructureUp(_size - 1);
+            _queue = new Node[capacity];
+            Size = 0;
         }
 
         // Return the highest priority item
-        public Node<T> PeekPriority()
+        public Node PeekPriority()
         {
             if (IsEmpty)
             {
@@ -79,8 +59,23 @@
             return _queue[0];
         }
 
-        // Remove the highest priority item while maintaining the priority property
-        public Node<T> Dequeue()
+        // Add an item with a given priority and value (while maintaining the priority property)
+        public void Enqueue(int priority, T value)
+        {
+            if (IsFull)
+            {
+                Resize(Math.Max(_defaultCapacity, _queue.Length * 2));
+            }
+
+            // Add an item to the end of the priority queue
+            _queue[Size] = new Node(priority, value);
+            Size++;
+            // Restructure the priority queue to maintain the priority property
+            RestructureUp(Size - 1);
+        }
+
+        // Remove the highest priority item (while maintaining the priority property)
+        public Node Dequeue()
         {
             if (IsEmpty)
             {
@@ -89,9 +84,9 @@
 
             // Remove the highest priority item from the top of the priority queue and replace it with the last item
             var item = _queue[0];
-            _queue[0] = _queue[_size - 1];
-            _queue[_size - 1] = null;
-            _size--;
+            _queue[0] = _queue[Size - 1];
+            _queue[Size - 1] = null;
+            Size--;
             // Restructure the priority queue to maintain the priority property
             RestructureDown(0);
 
@@ -99,7 +94,7 @@
         }
 
         // Return an item stored at a given index (as a test helper function)
-        public Node<T> GetAt(int index)
+        public Node GetAt(int index)
         {
             return _queue[index];
         }
@@ -114,16 +109,16 @@
         private int GetRightChildIndex(int index) => index * 2 + 2;
 
         // Return the left child of an item stored at a given index
-        private Node<T> GetLeftChild(int index) => _queue[GetLeftChildIndex(index)];
+        private Node GetLeftChild(int index) => _queue[GetLeftChildIndex(index)];
 
         // Return the right child of an item stored at a given index
-        private Node<T> GetRightChild(int index) => _queue[GetRightChildIndex(index)];
+        private Node GetRightChild(int index) => _queue[GetRightChildIndex(index)];
 
         // Check whether an item stored at a given index has a left child or not
-        private bool HasLeftChild(int index) => GetLeftChildIndex(index) < _size;
+        private bool HasLeftChild(int index) => GetLeftChildIndex(index) < Size;
 
         // Check whether an item stored at a given index has a right child or not
-        private bool HasRightChild(int index) => GetRightChildIndex(index) < _size;
+        private bool HasRightChild(int index) => GetRightChildIndex(index) < Size;
 
         // Restructure the priority queue bottom-up in such ways that the priority property is maintained
         private void RestructureUp(int index)
@@ -135,7 +130,7 @@
                 return;
             }
 
-            // If a current child is equal to or greater than its parent in terms of priority
+            // If the current child is equal to or greater than its parent in terms of priority
             // Break out of the recursion
             var cur = _queue[index];
             var parentIndex = GetParentIndex(index);
@@ -166,7 +161,7 @@
                 smallerChildIndex = GetRightChildIndex(index);
             }
 
-            // If a current parent is equal to or smaller than its smaller child in terms of priority
+            // If the current parent is equal to or less than its smaller child in terms of priority
             // Break out of the recursion
             if (_queue[index].Priority <= _queue[smallerChildIndex].Priority)
             {
@@ -186,22 +181,25 @@
             _queue[index2] = temp;
         }
 
-        // Resize the priority queue
-        private void Resize(int size)
+        // Resize the priority queue to a given capacity
+        private void Resize(int capacity)
         {
-            var array = new Node<T>[size];
-            Array.Copy(_queue, 0, array, 0, _size);
-            _queue = array;
+            var queue = new Node[capacity];
+            // Note that C# built-in function can be alternatively used as follows
+            // Array.Copy(_queue, queue, Size);
+            for (var i = 0; i < Size; i++)
+            {
+                queue[i] = _queue[i];
+            }
+            _queue = queue;
         }
 
-        public class Node<NodeT>
+        public class Node
         {
             public int Priority { get; }
-            public NodeT Value { get; set; }
+            public T Value { get; set; }
 
-            public Node(
-                int priority,
-                NodeT value)
+            public Node(int priority, T value)
             {
                 Priority = priority;
                 Value = value;

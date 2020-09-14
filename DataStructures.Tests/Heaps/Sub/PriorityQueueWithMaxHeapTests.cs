@@ -14,7 +14,6 @@
 
         private readonly Dictionary<int, int[]> _answersForInsertion = new Dictionary<int, int[]>()
         {
-
             { 1, new int[] { 5 } },
             /* (1)
 			            5
@@ -178,6 +177,46 @@
         }
 
         [Test]
+        [TestCase(-100)]
+        [TestCase(0)]
+        public void Constructor_WhenCapacityIsLessThanOrEqualToZero_ShouldThrowInvalidOperationException(int capacity)
+        {
+            // Arrange & Act & Assert
+            Assert.Throws<InvalidOperationException>(() => new PriorityQueueWithMaxHeap<string>(capacity));
+        }
+
+        [Test]
+        [TestCase(1)]
+        [TestCase(100)]
+        public void Constructor_WhenCapacityIsGreaterThanZero_ShouldNotThrowInvalidOperationException(int capacity)
+        {
+            // Arrange & Act & Assert
+            Assert.DoesNotThrow(() => new PriorityQueueWithMaxHeap<string>(capacity));
+        }
+
+        [Test]
+        [TestCase(0)]
+        [TestCase(1)]
+        [TestCase(2)]
+        [TestCase(3)]
+        [TestCase(4)]
+        [TestCase(5)]
+        public void Size_WhenCalled_ShouldReturnNumberOfItems(int range)
+        {
+            // Arrange
+            for (var i = 1; i <= range; i++)
+            {
+                _queue.Enqueue(i, $"Item {i}");
+            }
+
+            // Act
+            var result = _queue.Size;
+
+            // Assert
+            Assert.That(result, Is.EqualTo(range));
+        }
+
+        [Test]
         public void IsEmpty_WhenPriorityQueueIsEmpty_ShouldReturnTrue()
         {
             // Arrange & Act & Assert
@@ -185,10 +224,18 @@
         }
 
         [Test]
-        public void IsEmpty_WhenPriorityQueueIsNotEmpty_ShouldReturnFalse()
+        [TestCase(1)]
+        [TestCase(2)]
+        [TestCase(3)]
+        [TestCase(4)]
+        [TestCase(5)]
+        public void IsEmpty_WhenPriorityQueueIsNotEmpty_ShouldReturnFalse(int range)
         {
             // Arrange
-            _queue.Enqueue(1, "Item 1");
+            for (var i = 1; i <= range; i++)
+            {
+                _queue.Enqueue(i, $"Item {i}");
+            }
 
             // Act
             var result = _queue.IsEmpty;
@@ -221,53 +268,6 @@
         }
 
         [Test]
-        [TestCase(0)]
-        [TestCase(1)]
-        [TestCase(2)]
-        [TestCase(3)]
-        [TestCase(4)]
-        [TestCase(5)]
-        public void Count_WhenCalled_ShouldReturnNumberOfItems(int range)
-        {
-            // Arrange
-            for (var i = 1; i <= range; i++)
-            {
-                _queue.Enqueue(i, $"Item {i}");
-            }
-
-            // Act
-            var result = _queue.Count;
-
-            // Assert
-            Assert.That(result, Is.EqualTo(range));
-        }
-
-        [Test]
-        public void Enqueue_WhenCalled_ShouldAddItemWithPriorityPropertyMaintained()
-        {
-            // Arrange & Act & Assert
-            for (var i = 0; i < _values.Length; i++)
-            {
-                _queue.Enqueue(_values[i], $"Item {_values[i]}");
-                var answer = _answersForInsertion[i + 1];
-                Assert.That(
-                    _queue.PeekPriority(),
-                    Is.Not.Null
-                    .And.Property(nameof(PriorityQueueWithMaxHeap<string>.Node<string>.Priority)).EqualTo(answer.Max())
-                    .And.Property(nameof(PriorityQueueWithMaxHeap<string>.Node<string>.Value)).EqualTo($"Item {answer.Max()}"));
-                Assert.That(_queue.Count, Is.EqualTo(i + 1));
-                for (var j = 0; j < answer.Length; j++)
-                {
-                    Assert.That(
-                        _queue.GetAt(j),
-                        Is.Not.Null
-                        .And.Property(nameof(PriorityQueueWithMaxHeap<string>.Node<string>.Priority)).EqualTo(answer[j])
-                        .And.Property(nameof(PriorityQueueWithMaxHeap<string>.Node<string>.Value)).EqualTo($"Item {answer[j]}"));
-                }
-            }
-        }
-
-        [Test]
         public void PeekPriority_WhenPriorityQueueIsEmpty_ShouldThrowInvalidOperationException()
         {
             // Arrange & Act & Assert
@@ -285,9 +285,34 @@
                 Assert.That(
                     _queue.PeekPriority(),
                     Is.Not.Null
-                    .And.Property(nameof(PriorityQueueWithMaxHeap<string>.Node<string>.Priority)).EqualTo(answer.Max())
-                    .And.Property(nameof(PriorityQueueWithMaxHeap<string>.Node<string>.Value)).EqualTo($"Item {answer.Max()}"));
-                Assert.That(_queue.Count, Is.EqualTo(i + 1));
+                    .And.Property(nameof(PriorityQueueWithMaxHeap<string>.Node.Priority)).EqualTo(answer.Max())
+                    .And.Property(nameof(PriorityQueueWithMaxHeap<string>.Node.Value)).EqualTo($"Item {answer.Max()}"));
+                Assert.That(_queue.Size, Is.EqualTo(i + 1));
+            }
+        }
+
+        [Test]
+        public void Enqueue_WhenCalled_ShouldAddItemWithGivenPriorityAndValueWithPriorityPropertyMaintained()
+        {
+            // Arrange & Act & Assert
+            for (var i = 0; i < _values.Length; i++)
+            {
+                _queue.Enqueue(_values[i], $"Item {_values[i]}");
+                var answer = _answersForInsertion[i + 1];
+                Assert.That(
+                    _queue.PeekPriority(),
+                    Is.Not.Null
+                    .And.Property(nameof(PriorityQueueWithMaxHeap<string>.Node.Priority)).EqualTo(answer.Max())
+                    .And.Property(nameof(PriorityQueueWithMaxHeap<string>.Node.Value)).EqualTo($"Item {answer.Max()}"));
+                Assert.That(_queue.Size, Is.EqualTo(i + 1));
+                for (var j = 0; j < answer.Length; j++)
+                {
+                    Assert.That(
+                        _queue.GetAt(j),
+                        Is.Not.Null
+                        .And.Property(nameof(PriorityQueueWithMaxHeap<string>.Node.Priority)).EqualTo(answer[j])
+                        .And.Property(nameof(PriorityQueueWithMaxHeap<string>.Node.Value)).EqualTo($"Item {answer[j]}"));
+                }
             }
         }
 
@@ -314,16 +339,16 @@
                 Assert.That(
                     _queue.Dequeue(),
                     Is.Not.Null
-                    .And.Property(nameof(PriorityQueueWithMaxHeap<string>.Node<string>.Priority)).EqualTo(_values.Length - i)
-                    .And.Property(nameof(PriorityQueueWithMaxHeap<string>.Node<string>.Value)).EqualTo($"Item {_values.Length - i}"));
-                Assert.That(_queue.Count, Is.EqualTo(_values.Length - i - 1));
+                    .And.Property(nameof(PriorityQueueWithMaxHeap<string>.Node.Priority)).EqualTo(_values.Length - i)
+                    .And.Property(nameof(PriorityQueueWithMaxHeap<string>.Node.Value)).EqualTo($"Item {_values.Length - i}"));
+                Assert.That(_queue.Size, Is.EqualTo(_values.Length - i - 1));
                 for (var j = 0; j < answer.Length; j++)
                 {
                     Assert.That(
                         _queue.GetAt(j),
                         Is.Not.Null
-                        .And.Property(nameof(PriorityQueueWithMaxHeap<string>.Node<string>.Priority)).EqualTo(answer[j])
-                        .And.Property(nameof(PriorityQueueWithMaxHeap<string>.Node<string>.Value)).EqualTo($"Item {answer[j]}"));
+                        .And.Property(nameof(PriorityQueueWithMaxHeap<string>.Node.Priority)).EqualTo(answer[j])
+                        .And.Property(nameof(PriorityQueueWithMaxHeap<string>.Node.Value)).EqualTo($"Item {answer[j]}"));
                 }
             }
         }
