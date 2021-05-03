@@ -1,7 +1,7 @@
 ﻿namespace DataStructures.Tests.Stacks.Main
 {
     using System;
-    using DataStructures.Stacks.Sub;
+    using DataStructures.Stacks.Main;
     using NUnit.Framework;
 
     public class StackWithLinkedListTests
