@@ -4,7 +4,7 @@
     using System.Collections.Generic;
 
     // Min heap implemented using array
-    public class MinHeapWithArray<T>
+    public class MinHeap<T>
     {
         // Represent the heap
         private T[] _heap;
@@ -32,13 +32,13 @@
             }
         }
 
-        public MinHeapWithArray()
+        public MinHeap()
         {
             _heap = new T[_defaultCapacity];
             Size = 0;
         }
 
-        public MinHeapWithArray(int capacity)
+        public MinHeap(int capacity)
         {
             if (capacity <= 0)
             {

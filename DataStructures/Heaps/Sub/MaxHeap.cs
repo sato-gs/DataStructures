@@ -4,7 +4,7 @@
     using System.Collections.Generic;
 
     // Max heap implemented using array
-    public class MaxHeapWithArray<T>
+    public class MaxHeap<T>
     {
         // Represent the heap
         private T[] _heap;
@@ -32,13 +32,13 @@
             }
         }
 
-        public MaxHeapWithArray()
+        public MaxHeap()
         {
             _heap = new T[_defaultCapacity];
             Size = 0;
         }
 
-        public MaxHeapWithArray(int capacity)
+        public MaxHeap(int capacity)
         {
             if (capacity <= 0)
             {

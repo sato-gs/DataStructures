@@ -6,9 +6,9 @@
     using DataStructures.Heaps.Sub;
     using NUnit.Framework;
 
-    public class MaxHeapWithArrayTests
+    public class MaxHeapTests
     {
-        private MaxHeapWithArray<int> _heap;
+        private MaxHeap<int> _heap;
         private readonly int _capacity = 10;
         private readonly int[] _values = new int[] { 5, 3, 7, 2, 4, 6, 9, 1, 8, 10 };
 
@@ -173,7 +173,7 @@
         [SetUp]
         public void SetUp()
         {
-            _heap = new MaxHeapWithArray<int>(_capacity);
+            _heap = new MaxHeap<int>(_capacity);
         }
 
         [Test]
@@ -182,7 +182,7 @@
         public void Constructor_WhenCapacityIsLessThanOrEqualToZero_ShouldThrowInvalidOperationException(int capacity)
         {
             // Arrange & Act & Assert
-            Assert.Throws<InvalidOperationException>(() => new MaxHeapWithArray<int>(capacity));
+            Assert.Throws<InvalidOperationException>(() => new MaxHeap<int>(capacity));
         }
 
         [Test]
@@ -191,7 +191,7 @@
         public void Constructor_WhenCapacityIsGreaterThanZero_ShouldNotThrowInvalidOperationException(int capacity)
         {
             // Arrange & Act & Assert
-            Assert.DoesNotThrow(() => new MaxHeapWithArray<int>(capacity));
+            Assert.DoesNotThrow(() => new MaxHeap<int>(capacity));
         }
 
         [Test]
